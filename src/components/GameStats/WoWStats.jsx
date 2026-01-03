@@ -360,6 +360,46 @@ const styles = {
     fontWeight: '600',
     fontSize: '14px',
   },
+  // 3D Model Viewer styles
+  modelSection: {
+    marginTop: '20px',
+    paddingTop: '20px',
+    borderTop: '1px solid #1a1a1a',
+  },
+  modelContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '400px',
+    backgroundColor: '#0a0a0a',
+    borderRadius: '12px',
+    border: '1px solid #1a1a1a',
+    overflow: 'hidden',
+  },
+  modelIframe: {
+    width: '100%',
+    height: '100%',
+    border: 'none',
+  },
+  modelOverlay: {
+    position: 'absolute',
+    bottom: '0',
+    left: '0',
+    right: '0',
+    padding: '12px',
+    background: 'linear-gradient(transparent, rgba(0,0,0,0.8))',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  modelHint: {
+    fontSize: '11px',
+    color: '#666',
+  },
+  modelLink: {
+    fontSize: '12px',
+    color: '#ff8000',
+    textDecoration: 'none',
+  },
 };
 
 // Add keyframes for spinner
@@ -685,6 +725,30 @@ function WoWStats() {
             )}
           </>
         ) : null}
+      </div>
+
+      {/* 3D Character Model */}
+      <div style={styles.modelSection}>
+        <div style={styles.sectionTitle}>3D Character Model</div>
+        <div style={styles.modelContainer}>
+          <iframe
+            src={`https://www.wowhead.com/character/${profile.region || 'us'}/${(profile.realm || 'moon-guard').toLowerCase().replace(/\s+/g, '-')}/${encodeURIComponent(profile.name || 'Yüriko')}?viewer=1`}
+            style={styles.modelIframe}
+            title="WoW Character Model"
+            allowFullScreen
+          />
+          <div style={styles.modelOverlay}>
+            <span style={styles.modelHint}>Drag to rotate • Scroll to zoom</span>
+            <a
+              href={`https://www.wowhead.com/character/${profile.region || 'us'}/${(profile.realm || 'moon-guard').toLowerCase().replace(/\s+/g, '-')}/${encodeURIComponent(profile.name || 'Yüriko')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={styles.modelLink}
+            >
+              View on WoWHead →
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* Links */}
