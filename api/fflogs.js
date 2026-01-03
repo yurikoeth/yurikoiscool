@@ -1,8 +1,9 @@
 // Vercel API route for FFLogs (FFXIV)
-// Uses same OAuth as Warcraft Logs - same service provider
+// Requires separate FFLogs API credentials (https://www.fflogs.com/api/clients)
 
-const CLIENT_ID = process.env.WARCRAFTLOGS_CLIENT_ID?.trim();
-const CLIENT_SECRET = process.env.WARCRAFTLOGS_CLIENT_SECRET?.trim();
+// FFLogs uses separate OAuth from Warcraft Logs
+const CLIENT_ID = process.env.FFLOGS_CLIENT_ID?.trim();
+const CLIENT_SECRET = process.env.FFLOGS_CLIENT_SECRET?.trim();
 
 // Token cache
 let accessToken = null;
@@ -69,7 +70,7 @@ export default async function handler(req, res) {
   if (!CLIENT_ID || !CLIENT_SECRET) {
     return res.status(200).json({
       configured: false,
-      message: 'FFLogs credentials not configured'
+      message: 'FFLogs credentials not configured. Set FFLOGS_CLIENT_ID and FFLOGS_CLIENT_SECRET env vars.'
     });
   }
 
