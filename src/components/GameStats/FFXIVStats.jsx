@@ -5,6 +5,7 @@ import {
   calculateItemLevel,
   getFreeCompany,
 } from '../../services/xivapi.js';
+import { fetchAllFFLogsData, getParseColor } from '../../services/fflogs.js';
 import { config } from '../../config.js';
 import './FFXIVStats.css';
 
@@ -14,8 +15,11 @@ import './FFXIVStats.css';
  */
 export default function FFXIVStats() {
   const [characterData, setCharacterData] = useState(null);
+  const [logsData, setLogsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [logsLoading, setLogsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState('savage');
 
   useEffect(() => {
     async function loadCharacter() {
@@ -25,6 +29,17 @@ export default function FFXIVStats() {
 
         const data = await getConfiguredCharacter();
         setCharacterData(data);
+
+        // Load FFLogs data
+        setLogsLoading(true);
+        try {
+          const logs = await fetchAllFFLogsData();
+          setLogsData(logs);
+        } catch (logsErr) {
+          console.error('Failed to load FFLogs data:', logsErr);
+        } finally {
+          setLogsLoading(false);
+        }
       } catch (err) {
         console.error('Failed to load FFXIV character:', err);
         setError(err.message || 'Failed to load character data');
@@ -182,6 +197,92 @@ export default function FFXIVStats() {
         )}
       </div>
 
+      {/* FFLogs Section */}
+      <div className="ffxiv-logs-section">
+        <h4 className="ffxiv-category-title">Raid Logs (FFLogs)</h4>
+
+        {logsLoading ? (
+          <div className="ffxiv-logs-loading">Loading FFLogs data...</div>
+        ) : logsData?.error ? (
+          <div className="ffxiv-logs-error">{logsData.error}</div>
+        ) : logsData?.rankings ? (
+          <>
+            {/* Difficulty Tabs */}
+            <div className="ffxiv-difficulty-tabs">
+              {['savage', 'extreme', 'ultimate'].map((diff) => (
+                <button
+                  key={diff}
+                  onClick={() => setSelectedDifficulty(diff)}
+                  className={`ffxiv-diff-tab ${selectedDifficulty === diff ? 'ffxiv-diff-tab--active' : ''}`}
+                  style={selectedDifficulty === diff ? {
+                    color: diff === 'ultimate' ? '#e5cc80' :
+                           diff === 'savage' ? '#ff8000' : '#a335ee'
+                  } : {}}
+                >
+                  {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            {/* Average Performance */}
+            {logsData.rankings[selectedDifficulty]?.averagePerformance && (
+              <div className="ffxiv-average-parse">
+                <span className="ffxiv-average-label">
+                  {selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Average
+                </span>
+                <span
+                  className="ffxiv-average-value"
+                  style={{ color: getParseColor(logsData.rankings[selectedDifficulty].averagePerformance) }}
+                >
+                  {Math.round(logsData.rankings[selectedDifficulty].averagePerformance)}
+                </span>
+              </div>
+            )}
+
+            {/* Boss Parses */}
+            {logsData.rankings[selectedDifficulty]?.encounters?.length > 0 ? (
+              <div className="ffxiv-parses-list">
+                {logsData.rankings[selectedDifficulty].encounters.map((encounter, idx) => (
+                  <div key={idx} className="ffxiv-parse-card">
+                    <div className="ffxiv-parse-header">
+                      <div className="ffxiv-parse-boss">
+                        {encounter.iconUrl && (
+                          <img
+                            src={encounter.iconUrl}
+                            alt=""
+                            className="ffxiv-boss-icon"
+                            onError={(e) => { e.target.style.display = 'none'; }}
+                          />
+                        )}
+                        <span className="ffxiv-boss-name">{encounter.encounterName}</span>
+                      </div>
+                      <span
+                        className="ffxiv-parse-value"
+                        style={{ color: getParseColor(encounter.rankPercent) }}
+                      >
+                        {Math.round(encounter.rankPercent)}
+                      </span>
+                    </div>
+                    <div className="ffxiv-parse-stats">
+                      {encounter.totalKills && <span>Kills: {encounter.totalKills}</span>}
+                      {encounter.job && <span>Job: {encounter.job}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="ffxiv-no-parses">
+                No {selectedDifficulty} parses recorded.
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="ffxiv-logs-not-configured">
+            FFLogs integration available when credentials are configured.
+          </div>
+        )}
+      </div>
+
       {/* Footer */}
       <div className="ffxiv-footer">
         <a
@@ -192,6 +293,16 @@ export default function FFXIVStats() {
         >
           View on Lodestone
         </a>
+        {logsData?.profileUrl && (
+          <a
+            href={logsData.profileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ffxiv-fflogs-link"
+          >
+            View on FFLogs
+          </a>
+        )}
       </div>
     </div>
   );
