@@ -14,8 +14,8 @@ export const config = {
 
   // Steam profile
   steam: {
-    steamId: '76561198000000000', // Replace with your Steam ID
-    apiKey: '', // Get from https://steamcommunity.com/dev/apikey
+    steamId: '76561198355375261',
+    apiKey: 'B6B48C572C22956F30632E5B3890E6C8',
   },
 
   // FFXIV character
