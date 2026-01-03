@@ -24,6 +24,16 @@ export async function fetchCharacterProfile() {
 
     const data = await response.json();
 
+    // Construct character render URL from thumbnail
+    // thumbnail: .../{id}-avatar.jpg -> render: .../{id}-main-raw.png
+    const thumbnailUrl = data.thumbnail_url;
+    let renderUrl = null;
+    if (thumbnailUrl) {
+      renderUrl = thumbnailUrl
+        .replace(/-avatar\.jpg.*$/, '-main-raw.png')
+        .replace(/\?.*$/, ''); // Remove query params
+    }
+
     return {
       name: data.name,
       realm: data.realm,
@@ -35,6 +45,7 @@ export async function fetchCharacterProfile() {
       faction: data.faction,
       achievementPoints: data.achievement_points,
       thumbnailUrl: data.thumbnail_url,
+      renderUrl: renderUrl,
       profileUrl: data.profile_url,
       gear: {
         itemLevel: data.gear?.item_level_equipped || 0,

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchAllWoWData } from '../../services/blizzard.js';
 import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
 
@@ -415,83 +415,73 @@ if (typeof document !== 'undefined' && !document.getElementById('wow-stats-style
   document.head.appendChild(styleSheet);
 }
 
-// 3D Character Model Viewer Component using WoWHead widget
-function CharacterModelViewer({ region, realm, name }) {
-  const [loaded, setLoaded] = useState(false);
+// Character Render Component - displays the full character paperdoll
+function CharacterRender({ renderUrl, name, wowClass }) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  useEffect(() => {
-    // Load WoWHead's script for 3D model viewing
-    if (!document.getElementById('wowhead-3d-script')) {
-      const script = document.createElement('script');
-      script.id = 'wowhead-3d-script';
-      script.src = '//wow.zamimg.com/js/tooltips.js';
-      script.async = true;
-      script.onload = () => {
-        // Configure WoWHead
-        if (window.whTooltips) {
-          window.whTooltips.renameLinks = false;
-          window.whTooltips.colorLinks = false;
-        }
-        setLoaded(true);
-      };
-      document.head.appendChild(script);
-    } else {
-      setLoaded(true);
-    }
-  }, []);
+  // Class colors for the glow effect
+  const classColors = {
+    'Mage': '#3fc7eb',
+    'Warrior': '#c79c6e',
+    'Paladin': '#f58cba',
+    'Hunter': '#abd473',
+    'Rogue': '#fff569',
+    'Priest': '#ffffff',
+    'Shaman': '#0070de',
+    'Warlock': '#8788ee',
+    'Monk': '#00ff96',
+    'Druid': '#ff7d0a',
+    'Demon Hunter': '#a330c9',
+    'Death Knight': '#c41e3a',
+    'Evoker': '#33937f',
+  };
 
-  const realmSlug = realm.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '');
-  const wowheadUrl = `https://www.wowhead.com/character/${region}/${realmSlug}/${encodeURIComponent(name)}`;
+  const glowColor = classColors[wowClass] || '#ff8000';
+
+  if (!renderUrl || imageError) {
+    return (
+      <div style={{
+        ...styles.modelContainer,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#666',
+        fontSize: '14px',
+      }}>
+        Character render unavailable
+      </div>
+    );
+  }
 
   return (
-    <div style={styles.modelContainer}>
-      <a
-        href={wowheadUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+    <div style={{
+      ...styles.modelContainer,
+      background: `radial-gradient(ellipse at center bottom, ${glowColor}15 0%, transparent 60%), #0a0a0a`,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+    }}>
+      {!imageLoaded && (
+        <div style={styles.loading}>
+          <div style={styles.spinner}></div>
+          Loading character...
+        </div>
+      )}
+      <img
+        src={renderUrl}
+        alt={`${name} character render`}
+        onLoad={() => setImageLoaded(true)}
+        onError={() => setImageError(true)}
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100%',
-          textDecoration: 'none',
-          color: '#fff',
-          gap: '16px',
+          maxHeight: '380px',
+          maxWidth: '100%',
+          objectFit: 'contain',
+          display: imageLoaded ? 'block' : 'none',
+          filter: `drop-shadow(0 0 20px ${glowColor}40)`,
         }}
-      >
-        <div style={{
-          width: '120px',
-          height: '120px',
-          borderRadius: '50%',
-          border: '3px solid #ff8000',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#1a1a1a',
-          fontSize: '48px',
-        }}>
-          🎮
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '4px' }}>
-            View 3D Model
-          </div>
-          <div style={{ fontSize: '12px', color: '#888' }}>
-            Click to open on WoWHead
-          </div>
-        </div>
-        <div style={{
-          padding: '10px 24px',
-          backgroundColor: '#ff8000',
-          color: '#000',
-          borderRadius: '6px',
-          fontWeight: '600',
-          fontSize: '14px',
-        }}>
-          Open 3D Viewer →
-        </div>
-      </a>
+      />
     </div>
   );
 }
@@ -808,13 +798,13 @@ function WoWStats() {
         ) : null}
       </div>
 
-      {/* 3D Character Model */}
+      {/* Character Render */}
       <div style={styles.modelSection}>
-        <div style={styles.sectionTitle}>3D Character Model</div>
-        <CharacterModelViewer
-          region={profile.region || 'us'}
-          realm={profile.realm || 'Moon Guard'}
-          name={profile.name || 'Yüriko'}
+        <div style={styles.sectionTitle}>Character</div>
+        <CharacterRender
+          renderUrl={profile.renderUrl}
+          name={profile.name}
+          wowClass={profile.class}
         />
       </div>
 
