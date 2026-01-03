@@ -73,20 +73,24 @@ export default async function handler(req, res) {
     });
   }
 
-  const { name, server, region } = req.query;
-
-  const characterName = name || 'Yuriko Mh';
-  const serverSlug = (server || 'Excalibur').toLowerCase();
-  const serverRegion = (region || 'NA').toUpperCase();
+  // Use direct character ID for more reliable lookup
+  const CHARACTER_ID = 15692673;
 
   try {
-    // Query for zone rankings across difficulties
+    // Query by character ID directly
     const query = `
-      query CharacterRankings($name: String!, $serverSlug: String!, $serverRegion: String!) {
+      query CharacterRankings($id: Int!) {
         characterData {
-          character(name: $name, serverSlug: $serverSlug, serverRegion: $serverRegion) {
+          character(id: $id) {
             id
             name
+            server {
+              name
+              slug
+              region {
+                slug
+              }
+            }
             lodestoneID
             savage: zoneRankings(difficulty: 101)
             extreme: zoneRankings(difficulty: 100)
@@ -97,9 +101,7 @@ export default async function handler(req, res) {
     `;
 
     const result = await executeQuery(query, {
-      name: characterName,
-      serverSlug,
-      serverRegion,
+      id: CHARACTER_ID,
     });
 
     if (result.errors) {
@@ -138,6 +140,9 @@ export default async function handler(req, res) {
       };
     };
 
+    const serverSlug = character.server?.slug || 'excalibur';
+    const serverRegion = character.server?.region?.slug || 'na';
+
     res.status(200).json({
       configured: true,
       rankings: {
@@ -147,7 +152,7 @@ export default async function handler(req, res) {
         extreme: processRankings(character.extreme, 'Extreme'),
         ultimate: processRankings(character.ultimate, 'Ultimate'),
       },
-      profileUrl: `https://www.fflogs.com/character/${serverRegion.toLowerCase()}/${serverSlug}/${encodeURIComponent(characterName)}`,
+      profileUrl: `https://www.fflogs.com/character/id/${CHARACTER_ID}`,
     });
   } catch (error) {
     console.error('FFLogs API error:', error);
