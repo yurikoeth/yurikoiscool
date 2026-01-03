@@ -13,7 +13,7 @@ export async function fetchCharacterProfile() {
   const realm = wow.realm;
   const region = wow.region;
 
-  const url = `https://raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${characterName}&fields=gear,mythic_plus_scores_by_season:current,mythic_plus_best_runs:all,raid_progression`;
+  const url = `https://raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${characterName}&fields=gear,mythic_plus_scores_by_season:current,mythic_plus_best_runs:all,raid_progression,mythic_plus_ranks`;
 
   try {
     const response = await fetch(url);
@@ -39,6 +39,11 @@ export async function fetchCharacterProfile() {
       gear: {
         itemLevel: data.gear?.item_level_equipped || 0,
         itemLevelTotal: data.gear?.item_level_total || 0,
+      },
+      mythicPlusRanks: {
+        overall: data.mythic_plus_ranks?.overall || {},
+        class: data.mythic_plus_ranks?.class || {},
+        spec: data.mythic_plus_ranks?.class_spec || {},
       },
     };
   } catch (error) {
@@ -110,7 +115,9 @@ export async function fetchRaidProgress() {
     const data = await response.json();
     const progression = data.raid_progression || {};
 
-    // Get the raids in order (most recent first)
+    // Raid tier priority (current tier first)
+    const raidPriority = ['manaforge-omega', 'liberation-of-undermine', 'nerubar-palace'];
+
     const raids = Object.entries(progression).map(([raidSlug, progress]) => ({
       slug: raidSlug,
       name: formatRaidName(raidSlug),
@@ -121,8 +128,18 @@ export async function fetchRaidProgress() {
       totalBosses: progress.total_bosses,
     }));
 
+    // Sort by priority (current tier first)
+    raids.sort((a, b) => {
+      const aPriority = raidPriority.indexOf(a.slug);
+      const bPriority = raidPriority.indexOf(b.slug);
+      if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority;
+      if (aPriority !== -1) return -1;
+      if (bPriority !== -1) return 1;
+      return (b.mythicKills || 0) - (a.mythicKills || 0);
+    });
+
     return {
-      raids: raids.slice(0, 4), // Show top 4 raids
+      raids: raids.slice(0, 4),
     };
   } catch (error) {
     console.error('Failed to fetch raid progress:', error);

@@ -185,6 +185,60 @@ const styles = {
     fontWeight: '600',
     fontSize: '14px',
   },
+  rankBadge: {
+    flex: '1',
+    minWidth: '80px',
+    backgroundColor: '#0a0a0a',
+    border: '1px solid #1a1a1a',
+    borderRadius: '8px',
+    padding: '10px 8px',
+    textAlign: 'center',
+  },
+  rankLabel: {
+    display: 'block',
+    fontSize: '10px',
+    color: '#666',
+    textTransform: 'uppercase',
+    marginBottom: '4px',
+  },
+  rankValue: {
+    display: 'block',
+    fontSize: '16px',
+    fontWeight: 'bold',
+    color: '#ff8000',
+  },
+  rankSpec: {
+    display: 'block',
+    fontSize: '9px',
+    color: '#666',
+    marginTop: '2px',
+  },
+  raidDetailed: {
+    backgroundColor: '#0a0a0a',
+    borderRadius: '8px',
+    border: '1px solid #1a1a1a',
+    padding: '14px 16px',
+    marginBottom: '8px',
+  },
+  raidHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '10px',
+  },
+  difficultyRow: {
+    display: 'flex',
+    gap: '8px',
+  },
+  difficultyBadge: {
+    flex: 1,
+    padding: '6px 8px',
+    borderRadius: '4px',
+    fontSize: '11px',
+    fontWeight: '600',
+    textAlign: 'center',
+    backgroundColor: '#1a1a1a',
+  },
 };
 
 // Add keyframes for spinner
@@ -308,6 +362,30 @@ function WoWStats() {
         </div>
       </div>
 
+      {/* M+ Rankings */}
+      {profile.mythicPlusRanks?.spec?.realm && (
+        <div style={styles.section}>
+          <div style={styles.sectionTitle}>M+ Rankings</div>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <div style={styles.rankBadge}>
+              <span style={styles.rankLabel}>Realm</span>
+              <span style={styles.rankValue}>#{profile.mythicPlusRanks.spec.realm}</span>
+              <span style={styles.rankSpec}>{profile.activeSpec}</span>
+            </div>
+            <div style={styles.rankBadge}>
+              <span style={styles.rankLabel}>Region</span>
+              <span style={styles.rankValue}>#{profile.mythicPlusRanks.spec.region}</span>
+              <span style={styles.rankSpec}>{profile.activeSpec}</span>
+            </div>
+            <div style={{ ...styles.rankBadge, opacity: 0.7 }}>
+              <span style={styles.rankLabel}>World</span>
+              <span style={styles.rankValue}>#{profile.mythicPlusRanks.spec.world}</span>
+              <span style={styles.rankSpec}>{profile.activeSpec}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Best M+ Runs */}
       <div style={styles.section}>
         <div style={styles.sectionTitle}>Best Mythic+ Runs</div>
@@ -327,7 +405,30 @@ function WoWStats() {
       {/* Raid Progress */}
       <div style={styles.section}>
         <div style={styles.sectionTitle}>Raid Progression</div>
-        {raids.raids?.slice(0, 3).map((raid, index) => (
+        {/* Featured raid with all difficulties */}
+        {raids.raids?.[0] && (
+          <div style={styles.raidDetailed}>
+            <div style={styles.raidHeader}>
+              <span style={styles.raidName}>{raids.raids[0].name}</span>
+              <span style={{ ...styles.raidProgress, color: getProgressColor(raids.raids[0].summary) }}>
+                {raids.raids[0].summary}
+              </span>
+            </div>
+            <div style={styles.difficultyRow}>
+              <div style={{ ...styles.difficultyBadge, color: '#1eff00', borderLeft: '3px solid #1eff00' }}>
+                N: {raids.raids[0].normalKills}/{raids.raids[0].totalBosses}
+              </div>
+              <div style={{ ...styles.difficultyBadge, color: '#a335ee', borderLeft: '3px solid #a335ee' }}>
+                H: {raids.raids[0].heroicKills}/{raids.raids[0].totalBosses}
+              </div>
+              <div style={{ ...styles.difficultyBadge, color: '#ff8000', borderLeft: '3px solid #ff8000' }}>
+                M: {raids.raids[0].mythicKills}/{raids.raids[0].totalBosses}
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Other raids summary */}
+        {raids.raids?.slice(1, 3).map((raid, index) => (
           <div key={index} style={styles.raidCard}>
             <span style={styles.raidName}>{raid.name}</span>
             <span style={{ ...styles.raidProgress, color: getProgressColor(raid.summary) }}>
