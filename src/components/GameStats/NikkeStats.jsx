@@ -1,38 +1,8 @@
 import React from 'react';
 import { config } from '../../config.js';
-
-// Nikke cover art
-const NIKKE_COVER_ART = 'https://upload.wikimedia.org/wikipedia/en/5/52/Goddess_of_Victory_Nikke_logo.png';
+import './NikkeStats.css';
 
 const styles = {
-  container: {
-    backgroundColor: '#000000',
-    borderRadius: '12px',
-    padding: '24px',
-    color: '#e0e0e0',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
-    border: '1px solid #1a1a1a',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${NIKKE_COVER_ART})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    opacity: 0.08,
-    pointerEvents: 'none',
-    zIndex: 0,
-  },
-  contentWrapper: {
-    position: 'relative',
-    zIndex: 1,
-  },
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -216,9 +186,7 @@ function NikkeStats() {
   const rPercent = (distribution.r / total) * 100;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.backgroundImage} />
-      <div style={styles.contentWrapper}>
+    <div className="nikke-stats">
       {/* Header */}
       <div style={styles.header}>
         <img
@@ -322,7 +290,6 @@ function NikkeStats() {
             R
           </div>
         </div>
-      </div>
       </div>
     </div>
   );

@@ -1,39 +1,9 @@
 import { useState, useEffect } from 'react';
 import { fetchAllWoWData } from '../../services/blizzard.js';
 import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
-
-// WoW The War Within cover art
-const WOW_COVER_ART = 'https://upload.wikimedia.org/wikipedia/en/b/b7/World_of_Warcraft_The_War_Within_cover_art.jpg';
+import './WoWStats.css';
 
 const styles = {
-  container: {
-    backgroundColor: '#000000',
-    borderRadius: '12px',
-    padding: '24px',
-    color: '#e0e0e0',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
-    border: '1px solid #1a1a1a',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${WOW_COVER_ART})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    opacity: 0.1,
-    pointerEvents: 'none',
-    zIndex: 0,
-  },
-  contentWrapper: {
-    position: 'relative',
-    zIndex: 1,
-  },
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -591,9 +561,7 @@ function WoWStats() {
   const { profile, mythicPlus, raids } = data;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.backgroundImage} />
-      <div style={styles.contentWrapper}>
+    <div className="wow-stats">
       {/* Header with Character Avatar */}
       <div style={styles.header}>
         {profile.thumbnailUrl ? (
@@ -844,7 +812,6 @@ function WoWStats() {
             View on Warcraft Logs
           </a>
         )}
-      </div>
       </div>
     </div>
   );

@@ -1,38 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAllPOE2Data, formatExperience, getClassInfo } from '../../services/poe.js';
-
-// POE2 cover art background
-const POE2_COVER_ART = 'https://upload.wikimedia.org/wikipedia/en/2/22/Path_of_Exile_2_cover_art.jpg';
+import './POE2Stats.css';
 
 const styles = {
-  container: {
-    backgroundColor: '#000000',
-    borderRadius: '12px',
-    padding: '24px',
-    color: '#e0e0e0',
-    fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
-    border: '1px solid #1a1a1a',
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  backgroundImage: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${POE2_COVER_ART})`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    opacity: 0.1,
-    pointerEvents: 'none',
-    zIndex: 0,
-  },
-  content: {
-    position: 'relative',
-    zIndex: 1,
-  },
   header: {
     display: 'flex',
     alignItems: 'center',
@@ -329,9 +299,7 @@ function POE2Stats() {
   const challengeLeagueChars = characters.filter(c => c.league === currentLeague?.name).length;
 
   return (
-    <div style={styles.container}>
-      <div style={styles.backgroundImage} />
-      <div style={styles.content}>
+    <div className="poe2-stats">
       <div style={styles.header}>
         <div style={styles.logo}>P2</div>
         <h2 style={styles.title}>Path of Exile 2</h2>
@@ -412,7 +380,6 @@ function POE2Stats() {
             })}
           </ul>
         )}
-      </div>
       </div>
     </div>
   );
