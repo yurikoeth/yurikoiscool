@@ -29,7 +29,6 @@
   color: var(--steam-text);
   box-shadow: var(--steam-shadow);
   position: relative;
-  overflow: hidden;
 }
 
 /* Steam cover art background */
