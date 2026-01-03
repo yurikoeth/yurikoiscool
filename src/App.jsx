@@ -19,8 +19,6 @@ function App() {
 
         <section id="nfts" className="section">
           <div className="section__container">
-            <h2 className="section__title">NFT Collection</h2>
-            <p className="section__subtitle">My Ethereum NFT holdings</p>
             <NFTGallery />
           </div>
         </section>
