@@ -129,8 +129,8 @@ export default async function handler(req, res) {
         encounters: (rankings.rankings || []).map(enc => ({
           encounterName: enc.encounter?.name || 'Unknown',
           encounterId: enc.encounter?.id,
-          // WoW boss icon from Wowhead
-          iconUrl: enc.encounter?.id ? `https://wow.zamimg.com/images/wow/journal/ui-ej-boss-${enc.encounter.id}.png` : null,
+          // Boss icon from Warcraft Logs CDN
+          iconUrl: enc.encounter?.id ? `https://assets.rpglogs.com/img/warcraft/bosses/${enc.encounter.id}-icon.jpg` : null,
           rankPercent: enc.rankPercent,
           medianPercent: enc.medianPercent,
           totalKills: enc.totalKills,

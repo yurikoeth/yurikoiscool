@@ -73,7 +73,7 @@ function MusicPlayer() {
       {isOpen && (
         <div style={styles.playerPanel}>
           <div style={styles.panelHeader}>
-            <span>Dark Opera Playlist</span>
+            <span>Listen...</span>
             <button style={styles.closeButton} onClick={() => setIsOpen(false)}>
               x
             </button>
