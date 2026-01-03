@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-/* Subtle meteor shower background effect */
+/* FFXIV Dawntrail cover art background */
 .ffxiv-stats::before {
   content: '';
   position: absolute;
@@ -22,10 +22,17 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(65, 105, 225, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.06) 0%, transparent 50%);
+  background-image: url('https://lds-img.finalfantasyxiv.com/h/F/Es0Ur2aBBk1x7Br1f6VLuTxYu4.jpg');
+  background-size: cover;
+  background-position: center top;
+  opacity: 0.12;
   pointer-events: none;
+  z-index: 0;
+}
+
+.ffxiv-stats > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Header */

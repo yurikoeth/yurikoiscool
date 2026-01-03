@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAllPOE2Data, formatExperience, getClassInfo } from '../../services/poe.js';
 
+// POE2 cover art background
+const POE2_COVER_ART = 'https://web.poecdn.com/public/news/2024-11-14/POE2Header.jpg';
+
 const styles = {
   container: {
     backgroundColor: '#000000',
@@ -8,9 +11,27 @@ const styles = {
     padding: '24px',
     color: '#e0e0e0',
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    maxWidth: '600px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     border: '1px solid #1a1a1a',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundImage: `url(${POE2_COVER_ART})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    opacity: 0.1,
+    pointerEvents: 'none',
+    zIndex: 0,
+  },
+  content: {
+    position: 'relative',
+    zIndex: 1,
   },
   header: {
     display: 'flex',
@@ -309,6 +330,8 @@ function POE2Stats() {
 
   return (
     <div style={styles.container}>
+      <div style={styles.backgroundImage} />
+      <div style={styles.content}>
       <div style={styles.header}>
         <div style={styles.logo}>P2</div>
         <h2 style={styles.title}>Path of Exile 2</h2>
@@ -389,6 +412,7 @@ function POE2Stats() {
             })}
           </ul>
         )}
+      </div>
       </div>
     </div>
   );

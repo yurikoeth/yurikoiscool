@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { fetchAllWoWData } from '../../services/blizzard.js';
 import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
 
+// WoW The War Within cover art
+const WOW_COVER_ART = 'https://bnetcmsus-a.akamaihd.net/cms/blog_header/ci/CIGLT96ADILX1709251628498.jpg';
+
 const styles = {
   container: {
     backgroundColor: '#000000',
@@ -11,6 +14,25 @@ const styles = {
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     border: '1px solid #1a1a1a',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundImage: `url(${WOW_COVER_ART})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    opacity: 0.1,
+    pointerEvents: 'none',
+    zIndex: 0,
+  },
+  contentWrapper: {
+    position: 'relative',
+    zIndex: 1,
   },
   header: {
     display: 'flex',
@@ -570,6 +592,8 @@ function WoWStats() {
 
   return (
     <div style={styles.container}>
+      <div style={styles.backgroundImage} />
+      <div style={styles.contentWrapper}>
       {/* Header with Character Avatar */}
       <div style={styles.header}>
         {profile.thumbnailUrl ? (
@@ -820,6 +844,7 @@ function WoWStats() {
             View on Warcraft Logs
           </a>
         )}
+      </div>
       </div>
     </div>
   );

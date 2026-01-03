@@ -28,6 +28,29 @@
     Ubuntu, Cantarell, sans-serif;
   color: var(--steam-text);
   box-shadow: var(--steam-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Steam cover art background */
+.steam-stats::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://cdn.cloudflare.steamstatic.com/store/home/store_home_share.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.steam-stats > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Notice Banner */

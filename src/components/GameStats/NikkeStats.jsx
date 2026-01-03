@@ -1,6 +1,10 @@
 import React from 'react';
 import { config } from '../../config.js';
 
+// Nikke cover art
+const NIKKE_COVER_ART = 'https://nikke-goddess-of-victory-international.fandom.com/wiki/GODDESS_OF_VICTORY:_NIKKE_Wiki?file=1st+Anniversary+Wallpaper.png';
+const NIKKE_COVER_ALT = 'https://play-lh.googleusercontent.com/VCLS-SvT_GFb5gL4VcQJgHoYHT3d_kxd1FVD0qbvR8E_kQ-T_sWpHoQyLZQzqHPqHw';
+
 const styles = {
   container: {
     backgroundColor: '#000000',
@@ -10,6 +14,25 @@ const styles = {
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     border: '1px solid #1a1a1a',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundImage: `url(${NIKKE_COVER_ALT})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    opacity: 0.08,
+    pointerEvents: 'none',
+    zIndex: 0,
+  },
+  contentWrapper: {
+    position: 'relative',
+    zIndex: 1,
   },
   header: {
     display: 'flex',
@@ -195,6 +218,8 @@ function NikkeStats() {
 
   return (
     <div style={styles.container}>
+      <div style={styles.backgroundImage} />
+      <div style={styles.contentWrapper}>
       {/* Header */}
       <div style={styles.header}>
         <img
@@ -298,6 +323,7 @@ function NikkeStats() {
             R
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
