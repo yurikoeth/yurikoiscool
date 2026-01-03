@@ -17,19 +17,26 @@ const styles = {
     gap: '16px',
     marginBottom: '20px',
     paddingBottom: '16px',
-    borderBottom: '2px solid #ff4d6d',
+    borderBottom: '2px solid #ffffff',
   },
   avatar: {
     width: '56px',
     height: '56px',
     borderRadius: '50%',
-    backgroundColor: '#ff4d6d',
+    backgroundColor: '#ffffff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '24px',
     fontWeight: 'bold',
     color: '#000',
+  },
+  avatarImg: {
+    width: '56px',
+    height: '56px',
+    borderRadius: '50%',
+    objectFit: 'cover',
+    border: '2px solid #ffffff',
   },
   headerInfo: {
     flex: 1,
@@ -51,7 +58,7 @@ const styles = {
     borderRadius: '4px',
     fontSize: '11px',
     backgroundColor: '#1a1a1a',
-    color: '#ff4d6d',
+    color: '#ffffff',
     marginTop: '6px',
   },
   section: {
@@ -78,7 +85,7 @@ const styles = {
     width: '32px',
     height: '32px',
     borderRadius: '6px',
-    backgroundColor: '#ff4d6d',
+    backgroundColor: '#ffffff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -140,7 +147,7 @@ const styles = {
   squadPower: {
     fontSize: '12px',
     fontWeight: 'bold',
-    color: '#ff4d6d',
+    color: '#ffffff',
   },
   distributionBar: {
     display: 'flex',
@@ -190,7 +197,16 @@ function NikkeStats() {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <div style={styles.avatar}>
+        <img
+          src="https://static.wikia.nocookie.net/nikke-goddess-of-victory-international/images/a/a8/Snow_White_Heavy_Arms_MI.png"
+          alt="Snow White: Heavy Arms"
+          style={styles.avatarImg}
+          onError={(e) => {
+            e.target.style.display = 'none';
+            e.target.nextSibling.style.display = 'flex';
+          }}
+        />
+        <div style={{ ...styles.avatar, display: 'none' }}>
           {nikke.commanderName?.[0] || 'Y'}
         </div>
         <div style={styles.headerInfo}>
@@ -213,7 +229,7 @@ function NikkeStats() {
       <div style={styles.statsGrid}>
         <div style={styles.statCard}>
           <div style={styles.statLabel}>Squad Power</div>
-          <div style={{ ...styles.statValue, color: '#ff4d6d' }}>
+          <div style={{ ...styles.statValue, color: '#ffffff' }}>
             {(nikke.squadPower || 66488).toLocaleString()}
           </div>
         </div>
