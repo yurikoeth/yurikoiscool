@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchAllWoWData } from '../../services/blizzard.js';
 import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
 
@@ -415,6 +415,87 @@ if (typeof document !== 'undefined' && !document.getElementById('wow-stats-style
   document.head.appendChild(styleSheet);
 }
 
+// 3D Character Model Viewer Component using WoWHead widget
+function CharacterModelViewer({ region, realm, name }) {
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    // Load WoWHead's script for 3D model viewing
+    if (!document.getElementById('wowhead-3d-script')) {
+      const script = document.createElement('script');
+      script.id = 'wowhead-3d-script';
+      script.src = '//wow.zamimg.com/js/tooltips.js';
+      script.async = true;
+      script.onload = () => {
+        // Configure WoWHead
+        if (window.whTooltips) {
+          window.whTooltips.renameLinks = false;
+          window.whTooltips.colorLinks = false;
+        }
+        setLoaded(true);
+      };
+      document.head.appendChild(script);
+    } else {
+      setLoaded(true);
+    }
+  }, []);
+
+  const realmSlug = realm.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '');
+  const wowheadUrl = `https://www.wowhead.com/character/${region}/${realmSlug}/${encodeURIComponent(name)}`;
+
+  return (
+    <div style={styles.modelContainer}>
+      <a
+        href={wowheadUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100%',
+          textDecoration: 'none',
+          color: '#fff',
+          gap: '16px',
+        }}
+      >
+        <div style={{
+          width: '120px',
+          height: '120px',
+          borderRadius: '50%',
+          border: '3px solid #ff8000',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#1a1a1a',
+          fontSize: '48px',
+        }}>
+          🎮
+        </div>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '16px', fontWeight: '600', marginBottom: '4px' }}>
+            View 3D Model
+          </div>
+          <div style={{ fontSize: '12px', color: '#888' }}>
+            Click to open on WoWHead
+          </div>
+        </div>
+        <div style={{
+          padding: '10px 24px',
+          backgroundColor: '#ff8000',
+          color: '#000',
+          borderRadius: '6px',
+          fontWeight: '600',
+          fontSize: '14px',
+        }}>
+          Open 3D Viewer →
+        </div>
+      </a>
+    </div>
+  );
+}
+
 function WoWStats() {
   const [data, setData] = useState(null);
   const [logsData, setLogsData] = useState(null);
@@ -730,25 +811,11 @@ function WoWStats() {
       {/* 3D Character Model */}
       <div style={styles.modelSection}>
         <div style={styles.sectionTitle}>3D Character Model</div>
-        <div style={styles.modelContainer}>
-          <iframe
-            src={`https://www.wowhead.com/character/${profile.region || 'us'}/${(profile.realm || 'moon-guard').toLowerCase().replace(/\s+/g, '-')}/${encodeURIComponent(profile.name || 'Yüriko')}?viewer=1`}
-            style={styles.modelIframe}
-            title="WoW Character Model"
-            allowFullScreen
-          />
-          <div style={styles.modelOverlay}>
-            <span style={styles.modelHint}>Drag to rotate • Scroll to zoom</span>
-            <a
-              href={`https://www.wowhead.com/character/${profile.region || 'us'}/${(profile.realm || 'moon-guard').toLowerCase().replace(/\s+/g, '-')}/${encodeURIComponent(profile.name || 'Yüriko')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.modelLink}
-            >
-              View on WoWHead →
-            </a>
-          </div>
-        </div>
+        <CharacterModelViewer
+          region={profile.region || 'us'}
+          realm={profile.realm || 'Moon Guard'}
+          name={profile.name || 'Yüriko'}
+        />
       </div>
 
       {/* Links */}

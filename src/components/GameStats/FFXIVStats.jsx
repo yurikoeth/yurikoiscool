@@ -19,7 +19,7 @@ export default function FFXIVStats() {
   const [loading, setLoading] = useState(true);
   const [logsLoading, setLogsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedDifficulty, setSelectedDifficulty] = useState('savage');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('extreme');
 
   useEffect(() => {
     async function loadCharacter() {
