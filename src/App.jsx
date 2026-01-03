@@ -8,6 +8,7 @@ import WoWStats from './components/GameStats/WoWStats'
 import POE2Stats from './components/GameStats/POE2Stats'
 import NikkeStats from './components/GameStats/NikkeStats'
 import Footer from './components/Footer'
+import MusicPlayer from './components/MusicPlayer'
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
         </section>
       </main>
       <Footer />
+      <MusicPlayer />
     </div>
   )
 }
