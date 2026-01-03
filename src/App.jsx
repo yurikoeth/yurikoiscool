@@ -7,6 +7,7 @@ import FFXIVStats from './components/GameStats/FFXIVStats'
 import WoWStats from './components/GameStats/WoWStats'
 import POE2Stats from './components/GameStats/POE2Stats'
 import NikkeStats from './components/GameStats/NikkeStats'
+import ArcRaidersStats from './components/GameStats/ArcRaidersStats'
 import Footer from './components/Footer'
 import MusicPlayer from './components/MusicPlayer'
 
@@ -32,6 +33,7 @@ function App() {
               <WoWStats />
               <POE2Stats />
               <NikkeStats />
+              <ArcRaidersStats />
             </div>
           </div>
         </section>
