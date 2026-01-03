@@ -198,7 +198,7 @@ function NikkeStats() {
       {/* Header */}
       <div style={styles.header}>
         <img
-          src="https://static.wikia.nocookie.net/nikke-goddess-of-victory-international/images/a/a8/Snow_White_Heavy_Arms_MI.png"
+          src="https://i.pinimg.com/236x/8f/f2/88/8ff2880d8dbc2500cb6df63c54999075.jpg"
           alt="Snow White: Heavy Arms"
           style={styles.avatarImg}
           onError={(e) => {
