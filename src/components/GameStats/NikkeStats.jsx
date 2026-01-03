@@ -8,353 +8,281 @@ const styles = {
     padding: '24px',
     color: '#e0e0e0',
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    maxWidth: '600px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     border: '1px solid #1a1a1a',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '16px',
     marginBottom: '20px',
+    paddingBottom: '16px',
     borderBottom: '2px solid #ff4d6d',
-    paddingBottom: '12px',
   },
-  logo: {
-    width: '40px',
-    height: '40px',
+  avatar: {
+    width: '56px',
+    height: '56px',
+    borderRadius: '50%',
     backgroundColor: '#ff4d6d',
-    borderRadius: '8px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '18px',
+    fontSize: '24px',
     fontWeight: 'bold',
-    color: '#1a1a2e',
+    color: '#000',
+  },
+  headerInfo: {
+    flex: 1,
   },
   title: {
     margin: 0,
-    fontSize: '24px',
+    fontSize: '20px',
     fontWeight: '600',
     color: '#ffffff',
   },
-  subtitle: {
+  idBadge: {
     fontSize: '12px',
     color: '#888',
     marginTop: '2px',
   },
-  staticBadge: {
-    backgroundColor: '#3a3a5a',
-    color: '#a0a0c0',
-    padding: '4px 8px',
+  serverBadge: {
+    display: 'inline-block',
+    padding: '3px 8px',
     borderRadius: '4px',
-    fontSize: '12px',
-    marginLeft: 'auto',
+    fontSize: '11px',
+    backgroundColor: '#1a1a1a',
+    color: '#ff4d6d',
+    marginTop: '6px',
   },
   section: {
     marginBottom: '20px',
   },
   sectionTitle: {
-    fontSize: '14px',
-    color: '#888',
+    fontSize: '13px',
+    color: '#666',
     textTransform: 'uppercase',
     letterSpacing: '1px',
     marginBottom: '12px',
   },
-  statsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
+  unionCard: {
+    backgroundColor: '#0a0a0a',
+    borderRadius: '8px',
+    padding: '12px 16px',
+    border: '1px solid #1a1a1a',
+    display: 'flex',
+    alignItems: 'center',
     gap: '12px',
+    marginBottom: '16px',
   },
-  statCard: {
-    backgroundColor: '#0a0a0a',
-    padding: '16px',
-    borderRadius: '8px',
-    border: '1px solid #1a1a1a',
-    textAlign: 'center',
-  },
-  statCardHighlight: {
-    backgroundColor: '#0a0a0a',
-    padding: '16px',
-    borderRadius: '8px',
-    border: '1px solid #ff4d6d',
-    textAlign: 'center',
-  },
-  statLabel: {
-    fontSize: '11px',
-    color: '#888',
-    textTransform: 'uppercase',
-    marginBottom: '8px',
-  },
-  statValue: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    color: '#ffffff',
-  },
-  statValuePink: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    color: '#ff4d6d',
-  },
-  statValueGold: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    color: '#ffd700',
-  },
-  squadSection: {
-    backgroundColor: '#0a0a0a',
-    padding: '16px',
-    borderRadius: '8px',
-    border: '1px solid #1a1a1a',
-  },
-  squadTitle: {
-    fontSize: '14px',
-    color: '#888',
-    marginBottom: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  squadHeart: {
-    color: '#ff4d6d',
-    fontSize: '16px',
-  },
-  squadList: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-  squadMember: {
-    backgroundColor: '#1a1a1a',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    fontSize: '14px',
-    fontWeight: '500',
-    color: '#ffffff',
-    border: '1px solid #2a2a2a',
-    transition: 'all 0.2s ease',
-  },
-  rankCard: {
-    backgroundColor: '#0a0a0a',
-    padding: '20px',
-    borderRadius: '8px',
-    border: '1px solid #1a1a1a',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  rankInfo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-  },
-  rankIcon: {
-    width: '48px',
-    height: '48px',
-    borderRadius: '50%',
-    background: 'linear-gradient(135deg, #ffd700, #ff8c00)',
+  unionIcon: {
+    width: '32px',
+    height: '32px',
+    borderRadius: '6px',
+    backgroundColor: '#ff4d6d',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '20px',
+    fontSize: '14px',
     fontWeight: 'bold',
-    color: '#1a1a2e',
-    boxShadow: '0 2px 10px rgba(255, 215, 0, 0.4)',
+    color: '#000',
   },
-  rankDetails: {},
-  rankLabel: {
-    fontSize: '12px',
-    color: '#888',
+  unionName: {
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#fff',
+  },
+  statsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '10px',
+    marginBottom: '20px',
+  },
+  statCard: {
+    backgroundColor: '#0a0a0a',
+    padding: '14px 10px',
+    borderRadius: '8px',
+    border: '1px solid #1a1a1a',
+    textAlign: 'center',
+  },
+  statLabel: {
+    fontSize: '10px',
+    color: '#666',
+    textTransform: 'uppercase',
     marginBottom: '4px',
   },
-  rankValue: {
-    fontSize: '24px',
+  statValue: {
+    fontSize: '18px',
     fontWeight: 'bold',
-    color: '#ffd700',
+    color: '#ffffff',
   },
-  progressSection: {
-    marginTop: '12px',
-  },
-  progressLabel: {
-    fontSize: '12px',
-    color: '#888',
-    marginBottom: '6px',
+  squadGrid: {
     display: 'flex',
-    justifyContent: 'space-between',
+    gap: '8px',
+    flexWrap: 'wrap',
   },
-  progressBar: {
-    height: '8px',
-    backgroundColor: '#1a1a1a',
-    borderRadius: '4px',
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    background: 'linear-gradient(90deg, #ff4d6d, #ff8c94)',
-    borderRadius: '4px',
-    transition: 'width 0.3s ease',
-  },
-  emptyState: {
+  squadMember: {
+    backgroundColor: '#0a0a0a',
+    borderRadius: '8px',
+    padding: '10px',
+    border: '1px solid #1a1a1a',
     textAlign: 'center',
-    padding: '40px 20px',
-    color: '#666',
+    flex: '1 1 calc(33% - 6px)',
+    minWidth: '80px',
+  },
+  squadName: {
+    fontSize: '10px',
+    color: '#fff',
+    marginBottom: '4px',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+  },
+  squadPower: {
+    fontSize: '12px',
+    fontWeight: 'bold',
+    color: '#ff4d6d',
+  },
+  distributionBar: {
+    display: 'flex',
+    height: '24px',
+    borderRadius: '6px',
+    overflow: 'hidden',
+    marginBottom: '8px',
+  },
+  distributionSegment: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '11px',
+    fontWeight: '600',
+    color: '#000',
+  },
+  distributionLegend: {
+    display: 'flex',
+    gap: '16px',
+    justifyContent: 'center',
+    fontSize: '11px',
+    color: '#888',
+  },
+  legendItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '4px',
+  },
+  legendDot: {
+    width: '10px',
+    height: '10px',
+    borderRadius: '2px',
   },
 };
-
-// Helper to get rank icon
-function getRankIcon(rank) {
-  const rankIcons = {
-    'Champion': 'C',
-    'Grand Master': 'GM',
-    'Master': 'M',
-    'Diamond': 'D',
-    'Platinum': 'P',
-    'Gold': 'G',
-    'Silver': 'S',
-    'Bronze': 'B',
-  };
-  return rankIcons[rank] || rank.charAt(0);
-}
-
-// Helper to get rank color
-function getRankStyle(rank) {
-  const rankColors = {
-    'Champion': { background: 'linear-gradient(135deg, #ffd700, #ff8c00)', color: '#1a1a2e' },
-    'Grand Master': { background: 'linear-gradient(135deg, #ff4d6d, #ff8c94)', color: '#1a1a2e' },
-    'Master': { background: 'linear-gradient(135deg, #a335ee, #c77dff)', color: '#ffffff' },
-    'Diamond': { background: 'linear-gradient(135deg, #00d4ff, #0099cc)', color: '#1a1a2e' },
-    'Platinum': { background: 'linear-gradient(135deg, #e5e4e2, #a8a8a8)', color: '#1a1a2e' },
-    'Gold': { background: 'linear-gradient(135deg, #ffd700, #daa520)', color: '#1a1a2e' },
-    'Silver': { background: 'linear-gradient(135deg, #c0c0c0, #808080)', color: '#1a1a2e' },
-    'Bronze': { background: 'linear-gradient(135deg, #cd7f32, #8b4513)', color: '#ffffff' },
-  };
-  return rankColors[rank] || { background: '#3a3a5a', color: '#ffffff' };
-}
 
 function NikkeStats() {
   const nikke = config.nikke;
 
-  // Handle case where nikke config is missing
-  if (!nikke) {
-    return (
-      <div style={styles.container}>
-        <div style={styles.header}>
-          <div style={styles.logo}>NK</div>
-          <h2 style={styles.title}>NIKKE</h2>
-        </div>
-        <div style={styles.emptyState}>
-          No NIKKE data configured. Update config.js to add your stats.
-        </div>
-      </div>
-    );
-  }
+  const distribution = nikke.distribution || { ssr: 45, sr: 15, r: 8 };
+  const total = distribution.ssr + distribution.sr + distribution.r;
 
-  const {
-    commanderLevel = 0,
-    totalNikkes = 0,
-    sssNikkes = 0,
-    favoriteSquad = [],
-    pvpRank = 'Unranked',
-  } = nikke;
-
-  // Calculate collection percentage (SSS out of total)
-  const sssPercentage = totalNikkes > 0 ? Math.round((sssNikkes / totalNikkes) * 100) : 0;
-
-  const rankStyle = getRankStyle(pvpRank);
+  const ssrPercent = (distribution.ssr / total) * 100;
+  const srPercent = (distribution.sr / total) * 100;
+  const rPercent = (distribution.r / total) * 100;
 
   return (
     <div style={styles.container}>
+      {/* Header */}
       <div style={styles.header}>
-        <div style={styles.logo}>NK</div>
+        <div style={styles.avatar}>
+          {nikke.commanderName?.[0] || 'Y'}
+        </div>
+        <div style={styles.headerInfo}>
+          <h2 style={styles.title}>{nikke.commanderName || 'YURIKO'}</h2>
+          <div style={styles.idBadge}>ID: {nikke.commanderId || '00195620'}</div>
+          <span style={styles.serverBadge}>NIKKE</span>
+        </div>
+      </div>
+
+      {/* Union */}
+      <div style={styles.unionCard}>
+        <div style={styles.unionIcon}>U</div>
         <div>
-          <h2 style={styles.title}>NIKKE</h2>
-          <div style={styles.subtitle}>Goddess of Victory</div>
+          <div style={{ fontSize: '10px', color: '#666', textTransform: 'uppercase' }}>Union</div>
+          <div style={styles.unionName}>{nikke.union || 'サイバーマネー'}</div>
         </div>
-        <span style={styles.staticBadge}>Manual Data</span>
       </div>
 
-      {/* Commander Stats */}
+      {/* Stats Grid */}
+      <div style={styles.statsGrid}>
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Squad Power</div>
+          <div style={{ ...styles.statValue, color: '#ff4d6d' }}>
+            {(nikke.squadPower || 66488).toLocaleString()}
+          </div>
+        </div>
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Nikkes</div>
+          <div style={styles.statValue}>{nikke.nikkesObtained || 68}</div>
+        </div>
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Costumes</div>
+          <div style={styles.statValue}>{nikke.costumes || 11}</div>
+        </div>
+      </div>
+
+      {/* Representative Squad */}
       <div style={styles.section}>
-        <div style={styles.sectionTitle}>Commander Profile</div>
-        <div style={styles.statsGrid}>
-          <div style={styles.statCardHighlight}>
-            <div style={styles.statLabel}>Commander Level</div>
-            <div style={styles.statValuePink}>{commanderLevel}</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statLabel}>Total NIKKEs</div>
-            <div style={styles.statValue}>{totalNikkes}</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statLabel}>SSS NIKKEs</div>
-            <div style={styles.statValueGold}>{sssNikkes}</div>
-          </div>
-          <div style={styles.statCard}>
-            <div style={styles.statLabel}>SSS Rate</div>
-            <div style={styles.statValue}>{sssPercentage}%</div>
-          </div>
-        </div>
-
-        {/* SSS Progress Bar */}
-        <div style={styles.progressSection}>
-          <div style={styles.progressLabel}>
-            <span>SSS Collection Progress</span>
-            <span>{sssNikkes} / {totalNikkes}</span>
-          </div>
-          <div style={styles.progressBar}>
-            <div
-              style={{
-                ...styles.progressFill,
-                width: `${sssPercentage}%`,
-              }}
-            />
-          </div>
+        <div style={styles.sectionTitle}>Representative Squad</div>
+        <div style={styles.squadGrid}>
+          {(nikke.representativeSquad || []).slice(0, 5).map((member, index) => (
+            <div key={index} style={styles.squadMember}>
+              <div style={styles.squadName}>{member.name}</div>
+              <div style={styles.squadPower}>⚔ {member.power?.toLocaleString()}</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* PvP Rank */}
+      {/* Nikke Distribution */}
       <div style={styles.section}>
-        <div style={styles.sectionTitle}>Arena Ranking</div>
-        <div style={styles.rankCard}>
-          <div style={styles.rankInfo}>
-            <div
-              style={{
-                ...styles.rankIcon,
-                background: rankStyle.background,
-                color: rankStyle.color,
-              }}
-            >
-              {getRankIcon(pvpRank)}
-            </div>
-            <div style={styles.rankDetails}>
-              <div style={styles.rankLabel}>Current Rank</div>
-              <div style={{ ...styles.rankValue, color: pvpRank === 'Champion' ? '#ffd700' : '#ff4d6d' }}>
-                {pvpRank}
-              </div>
-            </div>
+        <div style={styles.sectionTitle}>Nikke Distribution</div>
+        <div style={styles.distributionBar}>
+          <div style={{
+            ...styles.distributionSegment,
+            width: `${ssrPercent}%`,
+            backgroundColor: '#ffd700',
+          }}>
+            {distribution.ssr}
+          </div>
+          <div style={{
+            ...styles.distributionSegment,
+            width: `${srPercent}%`,
+            backgroundColor: '#a855f7',
+            color: '#fff',
+          }}>
+            {distribution.sr}
+          </div>
+          <div style={{
+            ...styles.distributionSegment,
+            width: `${rPercent}%`,
+            backgroundColor: '#3b82f6',
+            color: '#fff',
+          }}>
+            {distribution.r}
+          </div>
+        </div>
+        <div style={styles.distributionLegend}>
+          <div style={styles.legendItem}>
+            <div style={{ ...styles.legendDot, backgroundColor: '#ffd700' }}></div>
+            SSR
+          </div>
+          <div style={styles.legendItem}>
+            <div style={{ ...styles.legendDot, backgroundColor: '#a855f7' }}></div>
+            SR
+          </div>
+          <div style={styles.legendItem}>
+            <div style={{ ...styles.legendDot, backgroundColor: '#3b82f6' }}></div>
+            R
           </div>
         </div>
       </div>
-
-      {/* Favorite Squad */}
-      {favoriteSquad.length > 0 && (
-        <div style={styles.section}>
-          <div style={styles.sectionTitle}>Favorite Squad</div>
-          <div style={styles.squadSection}>
-            <div style={styles.squadTitle}>
-              <span style={styles.squadHeart}>&#9829;</span>
-              Main Team
-            </div>
-            <div style={styles.squadList}>
-              {favoriteSquad.map((nikke, index) => (
-                <span key={index} style={styles.squadMember}>
-                  {nikke}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

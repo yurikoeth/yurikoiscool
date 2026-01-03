@@ -42,11 +42,27 @@ export const config = {
 
   // Nikke (manual stats - no API)
   nikke: {
-    commanderLevel: 200,
-    totalNikkes: 150,
-    sssNikkes: 45,
-    favoriteSquad: ['Scarlet', 'Modernia', 'Rouge'],
-    pvpRank: 'Champion',
+    commanderName: 'YURIKO',
+    commanderId: '00195620',
+    server: '031 / 20PHX',
+    union: 'サイバーマネー',
+    squadPower: 66488,
+    nikkesObtained: 68,
+    costumes: 11,
+    // Representative squad (top 5)
+    representativeSquad: [
+      { name: 'Cinderella', power: 14192 },
+      { name: 'Scarlet: Black Shadow', power: 12094 },
+      { name: 'Red Hood', power: 10818 },
+      { name: 'Crown', power: 10270 },
+      { name: 'Modernia', power: 12094 },
+    ],
+    // Nikke distribution by rarity
+    distribution: {
+      ssr: 45,
+      sr: 15,
+      r: 8,
+    },
   },
 
   // API endpoints
