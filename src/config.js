@@ -71,9 +71,9 @@ export const config = {
     alchemyKey: '', // Get from https://www.alchemy.com/
     steam: 'https://api.steampowered.com',
     xivapi: 'https://xivapi.com',
-    fflogs: 'https://www.fflogs.com/api/v2',
-    fflogsClientId: '', // Get from https://www.fflogs.com/api/clients
-    fflogsClientSecret: '',
+    warcraftLogs: 'https://www.warcraftlogs.com/api/v2',
+    warcraftLogsClientId: '', // Get from https://www.warcraftlogs.com/api/clients
+    warcraftLogsClientSecret: '',
     blizzard: 'https://us.api.blizzard.com',
     poe: 'https://api.pathofexile.com',
   },

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchAllWoWData } from '../../services/blizzard.js';
+import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
 
 const styles = {
   container: {
@@ -239,6 +240,126 @@ const styles = {
     textAlign: 'center',
     backgroundColor: '#1a1a1a',
   },
+  // Warcraft Logs styles
+  logsSection: {
+    marginTop: '20px',
+    paddingTop: '20px',
+    borderTop: '1px solid #1a1a1a',
+  },
+  logsHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: '16px',
+  },
+  logsTitle: {
+    fontSize: '13px',
+    color: '#666',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    margin: 0,
+  },
+  logsNotConfigured: {
+    backgroundColor: '#0a0a0a',
+    border: '1px solid #1a1a1a',
+    borderRadius: '8px',
+    padding: '16px',
+    textAlign: 'center',
+    color: '#666',
+    fontSize: '13px',
+  },
+  difficultyTabs: {
+    display: 'flex',
+    gap: '4px',
+    marginBottom: '12px',
+    backgroundColor: '#0a0a0a',
+    padding: '4px',
+    borderRadius: '8px',
+  },
+  difficultyTab: {
+    flex: 1,
+    padding: '8px 12px',
+    border: 'none',
+    borderRadius: '6px',
+    fontSize: '12px',
+    fontWeight: '600',
+    cursor: 'pointer',
+    transition: 'all 0.2s ease',
+    backgroundColor: 'transparent',
+    color: '#666',
+  },
+  difficultyTabActive: {
+    backgroundColor: '#1a1a1a',
+    color: '#ffffff',
+  },
+  parseCard: {
+    backgroundColor: '#0a0a0a',
+    borderRadius: '8px',
+    border: '1px solid #1a1a1a',
+    padding: '12px',
+    marginBottom: '8px',
+  },
+  parseHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '8px',
+  },
+  bossName: {
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#ffffff',
+  },
+  parseValue: {
+    fontSize: '18px',
+    fontWeight: 'bold',
+    padding: '2px 8px',
+    borderRadius: '4px',
+    backgroundColor: '#1a1a1a',
+  },
+  parseStats: {
+    display: 'flex',
+    gap: '12px',
+    fontSize: '11px',
+    color: '#666',
+  },
+  averageParseCard: {
+    backgroundColor: '#0a0a0a',
+    borderRadius: '8px',
+    border: '1px solid #1a1a1a',
+    padding: '16px',
+    marginBottom: '12px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  averageLabel: {
+    fontSize: '12px',
+    color: '#888',
+    textTransform: 'uppercase',
+  },
+  averageValue: {
+    fontSize: '28px',
+    fontWeight: 'bold',
+  },
+  noParses: {
+    textAlign: 'center',
+    padding: '20px',
+    color: '#666',
+    fontSize: '13px',
+  },
+  wclLink: {
+    display: 'inline-block',
+    marginTop: '12px',
+    marginLeft: '8px',
+    padding: '10px 20px',
+    backgroundColor: '#f8b700',
+    color: '#000',
+    textDecoration: 'none',
+    borderRadius: '6px',
+    fontWeight: '600',
+    fontSize: '14px',
+  },
 };
 
 // Add keyframes for spinner
@@ -256,8 +377,11 @@ if (typeof document !== 'undefined' && !document.getElementById('wow-stats-style
 
 function WoWStats() {
   const [data, setData] = useState(null);
+  const [logsData, setLogsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [logsLoading, setLogsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState('heroic');
 
   const loadData = async () => {
     setLoading(true);
@@ -265,6 +389,20 @@ function WoWStats() {
     try {
       const wowData = await fetchAllWoWData();
       setData(wowData);
+
+      // Load Warcraft Logs data if configured
+      if (isWarcraftLogsConfigured()) {
+        setLogsLoading(true);
+        try {
+          const logs = await fetchAllWarcraftLogsData();
+          setLogsData(logs);
+        } catch (logsErr) {
+          console.error('Failed to load Warcraft Logs data:', logsErr);
+          // Don't fail the whole component if logs fail
+        } finally {
+          setLogsLoading(false);
+        }
+      }
     } catch (err) {
       setError(err.message || 'Failed to load WoW data');
     } finally {
@@ -438,12 +576,112 @@ function WoWStats() {
         ))}
       </div>
 
-      {/* Raider.io Link */}
-      {profile.profileUrl && (
-        <a href={profile.profileUrl} target="_blank" rel="noopener noreferrer" style={styles.link}>
-          View on Raider.io
-        </a>
-      )}
+      {/* Warcraft Logs Section */}
+      <div style={styles.logsSection}>
+        <div style={styles.logsHeader}>
+          <h3 style={styles.logsTitle}>Raid Logs (Warcraft Logs)</h3>
+        </div>
+
+        {!isWarcraftLogsConfigured() ? (
+          <div style={styles.logsNotConfigured}>
+            <p style={{ margin: '0 0 8px 0' }}>Warcraft Logs integration not configured.</p>
+            <p style={{ margin: 0, fontSize: '12px' }}>
+              Register at{' '}
+              <a href="https://www.warcraftlogs.com/api/clients" target="_blank" rel="noopener noreferrer" style={{ color: '#f8b700' }}>
+                warcraftlogs.com/api/clients
+              </a>{' '}
+              to enable parse display.
+            </p>
+          </div>
+        ) : logsLoading ? (
+          <div style={styles.loading}>
+            <div style={styles.spinner}></div>
+            Loading Warcraft Logs data...
+          </div>
+        ) : logsData?.error ? (
+          <div style={styles.logsNotConfigured}>
+            <p style={{ margin: 0 }}>{logsData.error}</p>
+          </div>
+        ) : logsData?.rankings ? (
+          <>
+            {/* Difficulty Tabs */}
+            <div style={styles.difficultyTabs}>
+              {['lfr', 'normal', 'heroic', 'mythic'].map((diff) => (
+                <button
+                  key={diff}
+                  onClick={() => setSelectedDifficulty(diff)}
+                  style={{
+                    ...styles.difficultyTab,
+                    ...(selectedDifficulty === diff ? styles.difficultyTabActive : {}),
+                    ...(selectedDifficulty === diff ? {
+                      color: diff === 'mythic' ? '#ff8000' :
+                             diff === 'heroic' ? '#a335ee' :
+                             diff === 'normal' ? '#1eff00' : '#00ccff'
+                    } : {}),
+                  }}
+                >
+                  {diff.charAt(0).toUpperCase() + diff.slice(1)}
+                </button>
+              ))}
+            </div>
+
+            {/* Average Performance */}
+            {logsData.rankings[selectedDifficulty]?.averagePerformance && (
+              <div style={styles.averageParseCard}>
+                <span style={styles.averageLabel}>
+                  {selectedDifficulty.charAt(0).toUpperCase() + selectedDifficulty.slice(1)} Average
+                </span>
+                <span style={{
+                  ...styles.averageValue,
+                  color: getParseColor(logsData.rankings[selectedDifficulty].averagePerformance)
+                }}>
+                  {Math.round(logsData.rankings[selectedDifficulty].averagePerformance)}
+                </span>
+              </div>
+            )}
+
+            {/* Boss Parses */}
+            {logsData.rankings[selectedDifficulty]?.encounters?.length > 0 ? (
+              logsData.rankings[selectedDifficulty].encounters.map((encounter, idx) => (
+                <div key={idx} style={styles.parseCard}>
+                  <div style={styles.parseHeader}>
+                    <span style={styles.bossName}>{encounter.encounterName}</span>
+                    <span style={{
+                      ...styles.parseValue,
+                      color: getParseColor(encounter.rankPercent)
+                    }}>
+                      {Math.round(encounter.rankPercent)}
+                    </span>
+                  </div>
+                  <div style={styles.parseStats}>
+                    {encounter.totalKills && <span>Kills: {encounter.totalKills}</span>}
+                    {encounter.medianPercent && <span>Median: {Math.round(encounter.medianPercent)}</span>}
+                    {encounter.spec && <span>Spec: {encounter.spec}</span>}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div style={styles.noParses}>
+                No {selectedDifficulty} parses recorded for current tier.
+              </div>
+            )}
+          </>
+        ) : null}
+      </div>
+
+      {/* Links */}
+      <div style={{ marginTop: '16px' }}>
+        {profile.profileUrl && (
+          <a href={profile.profileUrl} target="_blank" rel="noopener noreferrer" style={styles.link}>
+            View on Raider.io
+          </a>
+        )}
+        {logsData?.profileUrl && (
+          <a href={logsData.profileUrl} target="_blank" rel="noopener noreferrer" style={styles.wclLink}>
+            View on Warcraft Logs
+          </a>
+        )}
+      </div>
     </div>
   );
 }

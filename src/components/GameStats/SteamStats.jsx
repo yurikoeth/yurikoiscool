@@ -11,7 +11,10 @@ const formatPlaytime = (hours) => {
 };
 
 // Helper to get persona state text
-const getPersonaState = (state) => {
+const getPersonaState = (state, currentGame) => {
+  if (currentGame) {
+    return 'In-Game';
+  }
   const states = {
     0: 'Offline',
     1: 'Online',
@@ -131,6 +134,7 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAllGames, setShowAllGames] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -195,7 +199,7 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
           />
           <span
             className={`steam-header__status steam-header__status--${
-              profile.personaState === 1 ? 'online' : 'offline'
+              profile.currentGame ? 'ingame' : profile.personaState === 1 ? 'online' : 'offline'
             }`}
           ></span>
         </a>
@@ -208,8 +212,11 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
             )}
           </div>
           <p className="steam-header__status-text">
-            {getPersonaState(profile.personaState)}
-            {profile.personaState === 0 && profile.lastLogoff && (
+            {getPersonaState(profile.personaState, profile.currentGame)}
+            {profile.currentGame && (
+              <span className="steam-header__current-game"> - Playing {profile.currentGame}</span>
+            )}
+            {!profile.currentGame && profile.personaState === 0 && profile.lastLogoff && (
               <span> - Last seen {formatDate(profile.lastLogoff)}</span>
             )}
           </p>
@@ -280,8 +287,77 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
         </div>
       )}
 
-      {/* Profile Link */}
+      {/* All Games Dropdown */}
+      <div className="steam-all-games-section">
+        <button
+          className={`steam-all-games-toggle ${showAllGames ? 'steam-all-games-toggle--open' : ''}`}
+          onClick={() => setShowAllGames(!showAllGames)}
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="toggle-icon">
+            <path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z" />
+          </svg>
+          View All {ownedGames.totalCount} Games
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className={`chevron-icon ${showAllGames ? 'chevron-icon--open' : ''}`}
+          >
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" />
+          </svg>
+        </button>
+
+        <div className={`steam-all-games-panel ${showAllGames ? 'steam-all-games-panel--open' : ''}`}>
+          <div className="steam-all-games-grid">
+            {ownedGames.games.map((game) => (
+              <a
+                key={game.appId}
+                href={`https://store.steampowered.com/app/${game.appId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="steam-game-tile"
+                title={`${game.name} - ${formatPlaytime(game.playtimeHours)}`}
+              >
+                <img
+                  src={game.logoUrl}
+                  alt={game.name}
+                  className="steam-game-tile__image"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+                <div className="steam-game-tile__overlay">
+                  <span className="steam-game-tile__name">{game.name}</span>
+                  <span className="steam-game-tile__playtime">{formatPlaytime(game.playtimeHours)}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Action Links */}
       <div className="steam-footer">
+        <div className="steam-action-links">
+          <a
+            href={`steam://friends/add/${profile.steamId}`}
+            className="steam-action-link steam-action-link--add"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="action-icon">
+              <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+            Add Friend
+          </a>
+          <a
+            href={`steam://friends/message/${profile.steamId}`}
+            className="steam-action-link steam-action-link--message"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" className="action-icon">
+              <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
+            </svg>
+            Message
+          </a>
+        </div>
         <a
           href={profile.profileUrl}
           target="_blank"

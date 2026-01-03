@@ -32,6 +32,8 @@ export const fetchAllSteamData = async () => {
         personaState: data.profile.personastate,
         lastLogoff: data.profile.lastlogoff,
         timeCreated: data.profile.timecreated,
+        currentGame: data.profile.gameextrainfo || null,
+        currentGameId: data.profile.gameid || null,
       } : getMockPlayerSummary();
 
       const ownedGames = data.games?.games ? {

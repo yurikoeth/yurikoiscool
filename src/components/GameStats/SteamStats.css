@@ -106,6 +106,26 @@
   background: var(--steam-text-secondary);
 }
 
+.steam-header__status--ingame {
+  background: #90ba3c;
+  box-shadow: 0 0 8px rgba(144, 186, 60, 0.6);
+  animation: pulse-ingame 2s infinite;
+}
+
+@keyframes pulse-ingame {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(144, 186, 60, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(144, 186, 60, 0.9);
+  }
+}
+
+.steam-header__current-game {
+  color: #90ba3c;
+  font-weight: 500;
+}
+
 .steam-header__info {
   flex: 1;
   min-width: 0;
@@ -323,10 +343,206 @@
   font-weight: 500;
 }
 
+/* All Games Dropdown Section */
+.steam-all-games-section {
+  margin-bottom: 1.5rem;
+}
+
+.steam-all-games-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  background: var(--steam-card-bg);
+  color: var(--steam-text);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: 1px solid var(--steam-border);
+  border-radius: var(--steam-radius);
+  cursor: pointer;
+  transition: var(--steam-transition);
+}
+
+.steam-all-games-toggle:hover {
+  background: rgba(102, 192, 244, 0.1);
+  border-color: var(--steam-accent);
+  color: var(--steam-text-bright);
+}
+
+.steam-all-games-toggle--open {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  background: rgba(102, 192, 244, 0.15);
+  border-color: var(--steam-accent);
+  color: var(--steam-text-bright);
+}
+
+.steam-all-games-toggle .toggle-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--steam-accent);
+}
+
+.steam-all-games-toggle .chevron-icon {
+  width: 20px;
+  height: 20px;
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.steam-all-games-toggle .chevron-icon--open {
+  transform: rotate(180deg);
+}
+
+.steam-all-games-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.3s ease, border-color 0.3s ease;
+  background: var(--steam-card-bg);
+  border: 1px solid transparent;
+  border-top: none;
+  border-bottom-left-radius: var(--steam-radius);
+  border-bottom-right-radius: var(--steam-radius);
+}
+
+.steam-all-games-panel--open {
+  max-height: 60vh;
+  padding: 1rem;
+  overflow-y: auto;
+  border-color: var(--steam-accent);
+}
+
+.steam-all-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.steam-game-tile {
+  position: relative;
+  aspect-ratio: 460 / 215;
+  border-radius: calc(var(--steam-radius) / 2);
+  overflow: hidden;
+  background: var(--steam-bg-tertiary);
+  text-decoration: none;
+  transition: var(--steam-transition);
+}
+
+.steam-game-tile:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(102, 192, 244, 0.3);
+}
+
+.steam-game-tile__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--steam-transition);
+}
+
+.steam-game-tile__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.5rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.steam-game-tile:hover .steam-game-tile__overlay {
+  opacity: 1;
+}
+
+.steam-game-tile__name {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--steam-text-bright);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.steam-game-tile__playtime {
+  font-size: 0.625rem;
+  color: var(--steam-accent);
+  font-weight: 500;
+}
+
+/* Custom scrollbar for games panel */
+.steam-all-games-panel--open::-webkit-scrollbar {
+  width: 8px;
+}
+
+.steam-all-games-panel--open::-webkit-scrollbar-track {
+  background: var(--steam-bg-tertiary);
+  border-radius: 4px;
+}
+
+.steam-all-games-panel--open::-webkit-scrollbar-thumb {
+  background: var(--steam-accent);
+  border-radius: 4px;
+}
+
+.steam-all-games-panel--open::-webkit-scrollbar-thumb:hover {
+  background: var(--steam-accent-hover);
+}
+
 /* Footer */
 .steam-footer {
   padding-top: 1rem;
   border-top: 1px solid var(--steam-border);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.steam-action-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.steam-action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: var(--steam-card-bg);
+  color: var(--steam-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--steam-radius);
+  border: 1px solid var(--steam-border);
+  transition: var(--steam-transition);
+}
+
+.steam-action-link:hover {
+  background: rgba(102, 192, 244, 0.15);
+  border-color: var(--steam-accent);
+  color: var(--steam-text-bright);
+  transform: translateY(-2px);
+}
+
+.steam-action-link .action-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--steam-accent);
+}
+
+.steam-action-link--add:hover .action-icon {
+  color: var(--steam-success);
+}
+
+.steam-action-link--message:hover .action-icon {
+  color: var(--steam-accent);
 }
 
 .steam-profile-link {
@@ -521,6 +737,19 @@
   }
 
   .steam-profile-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .steam-all-games-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+
+  .steam-action-links {
+    flex-direction: column;
+  }
+
+  .steam-action-link {
     width: 100%;
     justify-content: center;
   }
