@@ -1,8 +1,8 @@
 // Vercel API route for Warcraft Logs
 // Proxies requests to avoid exposing OAuth credentials client-side
 
-const CLIENT_ID = process.env.WARCRAFTLOGS_CLIENT_ID;
-const CLIENT_SECRET = process.env.WARCRAFTLOGS_CLIENT_SECRET;
+const CLIENT_ID = process.env.WARCRAFTLOGS_CLIENT_ID?.trim();
+const CLIENT_SECRET = process.env.WARCRAFTLOGS_CLIENT_SECRET?.trim();
 
 // Token cache
 let accessToken = null;
@@ -26,7 +26,9 @@ async function getAccessToken() {
   });
 
   if (!response.ok) {
-    throw new Error(`OAuth error: ${response.status}`);
+    const errorBody = await response.text();
+    console.error('OAuth failed:', response.status, errorBody);
+    throw new Error(`OAuth error: ${response.status} - ${errorBody}`);
   }
 
   const data = await response.json();
