@@ -86,6 +86,7 @@ export async function fetchMythicPlusProfile() {
         upgrades: run.num_keystone_upgrades,
         affixes: (run.affixes || []).map(a => a.name),
         url: run.url,
+        iconUrl: run.short_name ? `https://cdnassets.raider.io/images/dungeons/${run.short_name.toLowerCase()}.jpg` : null,
       })),
     };
   } catch (error) {

@@ -530,6 +530,14 @@ function WoWStats() {
         <ul style={styles.dungeonList}>
           {mythicPlus.bestRuns?.slice(0, 5).map((run, index) => (
             <li key={index} style={styles.dungeonItem}>
+              {run.iconUrl && (
+                <img
+                  src={run.iconUrl}
+                  alt=""
+                  style={{ width: '24px', height: '24px', borderRadius: '4px', objectFit: 'cover' }}
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
+              )}
               <span style={styles.dungeonName}>{run.shortName || run.dungeon}</span>
               <span style={styles.keyLevel}>+{run.level}</span>
               <span style={{ ...styles.upgrades, color: run.completedInTime ? '#1eff00' : '#ff4444' }}>
@@ -645,7 +653,17 @@ function WoWStats() {
               logsData.rankings[selectedDifficulty].encounters.map((encounter, idx) => (
                 <div key={idx} style={styles.parseCard}>
                   <div style={styles.parseHeader}>
-                    <span style={styles.bossName}>{encounter.encounterName}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      {encounter.iconUrl && (
+                        <img
+                          src={encounter.iconUrl}
+                          alt=""
+                          style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }}
+                          onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                      )}
+                      <span style={styles.bossName}>{encounter.encounterName}</span>
+                    </div>
                     <span style={{
                       ...styles.parseValue,
                       color: getParseColor(encounter.rankPercent)
