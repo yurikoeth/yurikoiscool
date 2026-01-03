@@ -1,13 +1,18 @@
 // Vercel Serverless Function - Steam API Proxy
 // This avoids CORS issues by proxying Steam API requests server-side
 
-const STEAM_API_KEY = process.env.STEAM_API_KEY || 'B6B48C572C22956F30632E5B3890E6C8';
+// These should be set in Vercel Environment Variables
+const STEAM_API_KEY = process.env.STEAM_API_KEY;
 const STEAM_ID = process.env.STEAM_ID || '76561198355375261';
 
 export default async function handler(req, res) {
   // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
+
+  if (!STEAM_API_KEY) {
+    return res.status(500).json({ error: 'STEAM_API_KEY not configured in Vercel environment variables' });
+  }
 
   const { endpoint } = req.query;
 

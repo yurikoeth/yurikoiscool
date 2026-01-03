@@ -15,7 +15,7 @@ export const config = {
   // Steam profile
   steam: {
     steamId: '76561198355375261',
-    apiKey: 'B6B48C572C22956F30632E5B3890E6C8',
+    apiKey: '', // Set via Vercel env var STEAM_API_KEY
   },
 
   // FFXIV character
