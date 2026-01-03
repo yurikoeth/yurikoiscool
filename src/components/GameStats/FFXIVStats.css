@@ -13,7 +13,7 @@
   position: relative;
 }
 
-/* FFXIV Dawntrail cover art background */
+/* FFXIV themed background - fixed while content scrolls */
 .ffxiv-stats::before {
   content: '';
   position: absolute;
@@ -21,10 +21,11 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://upload.wikimedia.org/wikipedia/en/d/d1/Final_Fantasy_XIV_Dawntrail_cover_art.png');
-  background-size: cover;
-  background-position: center top;
-  opacity: 0.12;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(65, 105, 225, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(138, 43, 226, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(65, 105, 225, 0.04) 0%, transparent 40%);
+  background-attachment: fixed;
   pointer-events: none;
   z-index: 0;
 }

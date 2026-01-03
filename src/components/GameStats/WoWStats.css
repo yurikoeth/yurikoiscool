@@ -11,7 +11,7 @@
   position: relative;
 }
 
-/* WoW themed gradient background */
+/* WoW themed gradient background - fixed while content scrolls */
 .wow-stats::before {
   content: '';
   position: absolute;
@@ -23,6 +23,7 @@
     radial-gradient(ellipse at 30% 20%, rgba(255, 128, 0, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 70% 80%, rgba(138, 43, 226, 0.06) 0%, transparent 50%),
     linear-gradient(180deg, rgba(255, 128, 0, 0.03) 0%, transparent 30%);
+  background-attachment: fixed;
   pointer-events: none;
   z-index: 0;
 }

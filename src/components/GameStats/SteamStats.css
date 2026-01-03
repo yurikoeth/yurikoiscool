@@ -31,7 +31,7 @@
   position: relative;
 }
 
-/* Steam cover art background */
+/* Steam cover art background - fixed while content scrolls */
 .steam-stats::before {
   content: '';
   position: absolute;
@@ -42,6 +42,7 @@
   background-image: url('https://cdn.cloudflare.steamstatic.com/store/home/store_home_share.jpg');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   opacity: 0.08;
   pointer-events: none;
   z-index: 0;

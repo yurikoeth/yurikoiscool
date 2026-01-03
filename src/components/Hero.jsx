@@ -23,7 +23,7 @@ const Hero = () => {
               View Collection
             </a>
             <a href="#about" className="hero__cta hero__cta--secondary">
-              Learn More
+              View Games
             </a>
           </div>
 

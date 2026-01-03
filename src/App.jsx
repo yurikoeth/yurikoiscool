@@ -27,8 +27,7 @@ function App() {
 
         <section id="games" className="section section--alt">
           <div className="section__container">
-            <h2 className="section__title">Game Stats</h2>
-            <p className="section__subtitle">My gaming profiles and achievements</p>
+
             <div className="games-grid">
               <SteamStats />
               <FFXIVStats />

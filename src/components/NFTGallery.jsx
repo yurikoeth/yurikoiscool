@@ -154,8 +154,6 @@ export default function NFTGallery() {
 
   return (
     <div className="nft-gallery-container">
-      <h2 className="nft-gallery-title">NFT Collection</h2>
-
       {loading ? (
         <div className="nft-grid">
           {[...Array(8)].map((_, i) => (
