@@ -11,6 +11,9 @@ const ArcRaidersStats = () => {
   const [showLogger, setShowLogger] = useState(false);
   const [expandedRaid, setExpandedRaid] = useState(null);
 
+  // Only show admin controls with ?admin=true in URL
+  const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
+
   useEffect(() => {
     loadRaids();
   }, []);
@@ -71,12 +74,14 @@ const ArcRaidersStats = () => {
       <div className="arc-stats__header">
         <div className="arc-stats__title-row">
           <h2>ARC Raiders</h2>
-          <button
-            className="arc-stats__log-btn"
-            onClick={() => setShowLogger(!showLogger)}
-          >
-            {showLogger ? 'Close' : '+ Log Raid'}
-          </button>
+          {isAdmin && (
+            <button
+              className="arc-stats__log-btn"
+              onClick={() => setShowLogger(!showLogger)}
+            >
+              {showLogger ? 'Close' : '+ Log Raid'}
+            </button>
+          )}
         </div>
         {isDemo && <span className="arc-stats__demo-badge">Demo Data</span>}
       </div>
