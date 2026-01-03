@@ -1,178 +1,149 @@
-// Blizzard API Service for World of Warcraft
-// Handles OAuth authentication and character data fetching
+// Raider.io API Service for World of Warcraft
+// Free API, no key required
 import { config } from '../config.js';
 
-const { wow, apis } = config;
-
-// Cache for OAuth token
-let accessToken = null;
-let tokenExpiry = 0;
+const { wow } = config;
 
 /**
- * Fetch OAuth access token using client credentials flow
- * @returns {Promise<string|null>} Access token or null if credentials missing
+ * Fetch character profile from Raider.io
+ * @returns {Promise<object>} Character data
  */
-export async function getAccessToken() {
-  // Check if we have valid cached token
-  if (accessToken && Date.now() < tokenExpiry) {
-    return accessToken;
-  }
+export async function fetchCharacterProfile() {
+  const characterName = encodeURIComponent(wow.characterName);
+  const realm = wow.realm;
+  const region = wow.region;
 
-  // Validate credentials exist
-  if (!wow.clientId || !wow.clientSecret) {
-    console.warn('Blizzard API credentials not configured. Using mock data.');
-    return null;
-  }
+  const url = `https://raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${characterName}&fields=gear,mythic_plus_scores_by_season:current,mythic_plus_best_runs:all,raid_progression`;
 
   try {
-    const tokenUrl = `https://${wow.region}.battle.net/oauth/token`;
-    const credentials = btoa(`${wow.clientId}:${wow.clientSecret}`);
-
-    const response = await fetch(tokenUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${credentials}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'grant_type=client_credentials',
-    });
+    const response = await fetch(url);
 
     if (!response.ok) {
-      throw new Error(`OAuth failed: ${response.status} ${response.statusText}`);
+      throw new Error(`Raider.io API error: ${response.status}`);
     }
 
     const data = await response.json();
-    accessToken = data.access_token;
-    // Set expiry 5 minutes before actual expiry for safety
-    tokenExpiry = Date.now() + (data.expires_in - 300) * 1000;
 
-    return accessToken;
-  } catch (error) {
-    console.error('Failed to get Blizzard access token:', error);
-    return null;
-  }
-}
-
-/**
- * Make authenticated API request to Blizzard
- * @param {string} endpoint - API endpoint path
- * @param {object} params - Query parameters
- * @returns {Promise<object|null>} API response data or null on error
- */
-async function blizzardFetch(endpoint, params = {}) {
-  const token = await getAccessToken();
-
-  if (!token) {
-    return null;
-  }
-
-  try {
-    const url = new URL(`${apis.blizzard}${endpoint}`);
-    url.searchParams.append('namespace', `profile-${wow.region}`);
-    url.searchParams.append('locale', 'en_US');
-
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.append(key, value);
-    });
-
-    const response = await fetch(url.toString(), {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Blizzard API request failed:', error);
-    return null;
-  }
-}
-
-/**
- * Fetch character profile data
- * @returns {Promise<object>} Character profile or mock data
- */
-export async function fetchCharacterProfile() {
-  const endpoint = `/profile/wow/character/${wow.realm}/${wow.characterName.toLowerCase()}`;
-  const data = await blizzardFetch(endpoint);
-
-  if (data) {
     return {
       name: data.name,
-      realm: data.realm?.name || wow.realm,
-      class: data.character_class?.name || 'Unknown',
-      race: data.race?.name || 'Unknown',
-      level: data.level || 80,
-      faction: data.faction?.name || 'Unknown',
-      itemLevel: data.equipped_item_level || 0,
-      averageItemLevel: data.average_item_level || 0,
-      guild: data.guild?.name || null,
-      lastLogin: data.last_login_timestamp,
+      realm: data.realm,
+      region: data.region,
+      class: data.class,
+      activeSpec: data.active_spec_name,
+      activeRole: data.active_spec_role,
+      race: data.race,
+      faction: data.faction,
+      achievementPoints: data.achievement_points,
+      thumbnailUrl: data.thumbnail_url,
+      profileUrl: data.profile_url,
+      gear: {
+        itemLevel: data.gear?.item_level_equipped || 0,
+        itemLevelTotal: data.gear?.item_level_total || 0,
+      },
     };
+  } catch (error) {
+    console.error('Failed to fetch character profile:', error);
+    return getMockCharacterProfile();
   }
-
-  // Return mock data if API fails or no credentials
-  return getMockCharacterProfile();
 }
 
 /**
- * Fetch Mythic+ profile data
- * @returns {Promise<object>} M+ data or mock data
+ * Fetch Mythic+ data from Raider.io
+ * @returns {Promise<object>} M+ data
  */
 export async function fetchMythicPlusProfile() {
-  const endpoint = `/profile/wow/character/${wow.realm}/${wow.characterName.toLowerCase()}/mythic-keystone-profile/season/current`;
-  const data = await blizzardFetch(endpoint);
+  const characterName = encodeURIComponent(wow.characterName);
+  const realm = wow.realm;
+  const region = wow.region;
 
-  if (data) {
+  const url = `https://raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${characterName}&fields=mythic_plus_scores_by_season:current,mythic_plus_best_runs:all`;
+
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Raider.io API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const currentSeason = data.mythic_plus_scores_by_season?.[0];
+
     return {
-      rating: data.mythic_rating?.rating || 0,
-      ratingColor: data.mythic_rating?.color || { r: 255, g: 255, b: 255 },
-      bestRuns: (data.best_runs || []).slice(0, 5).map(run => ({
-        dungeon: run.dungeon?.name || 'Unknown',
-        level: run.keystone_level || 0,
-        completedInTime: run.is_completed_within_time || false,
-        duration: run.duration || 0,
-        affixes: (run.keystone_affixes || []).map(a => a.name),
+      rating: currentSeason?.scores?.all || 0,
+      ratingColor: currentSeason?.segments?.all?.color || '#ffffff',
+      bestRuns: (data.mythic_plus_best_runs || []).slice(0, 8).map(run => ({
+        dungeon: run.dungeon,
+        shortName: run.short_name,
+        level: run.mythic_level,
+        score: run.score,
+        completedInTime: run.num_keystone_upgrades > 0,
+        upgrades: run.num_keystone_upgrades,
+        affixes: (run.affixes || []).map(a => a.name),
+        url: run.url,
       })),
     };
+  } catch (error) {
+    console.error('Failed to fetch M+ data:', error);
+    return getMockMythicPlusProfile();
   }
-
-  return getMockMythicPlusProfile();
 }
 
 /**
- * Fetch raid progression data
- * @returns {Promise<object>} Raid progress or mock data
+ * Fetch raid progression from Raider.io
+ * @returns {Promise<object>} Raid progress
  */
 export async function fetchRaidProgress() {
-  const endpoint = `/profile/wow/character/${wow.realm}/${wow.characterName.toLowerCase()}/encounters/raids`;
-  const data = await blizzardFetch(endpoint);
+  const characterName = encodeURIComponent(wow.characterName);
+  const realm = wow.realm;
+  const region = wow.region;
 
-  if (data) {
-    // Get the most recent expansion's raids
-    const expansions = data.expansions || [];
-    const currentExpansion = expansions[expansions.length - 1];
+  const url = `https://raider.io/api/v1/characters/profile?region=${region}&realm=${realm}&name=${characterName}&fields=raid_progression`;
 
-    if (currentExpansion && currentExpansion.instances) {
-      return {
-        expansionName: currentExpansion.expansion?.name || 'Current Expansion',
-        raids: currentExpansion.instances.map(raid => ({
-          name: raid.instance?.name || 'Unknown Raid',
-          modes: (raid.modes || []).map(mode => ({
-            difficulty: mode.difficulty?.name || 'Unknown',
-            status: mode.status?.type || 'INCOMPLETE',
-            progress: `${mode.progress?.completed_count || 0}/${mode.progress?.total_count || 0}`,
-          })),
-        })),
-      };
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`Raider.io API error: ${response.status}`);
     }
-  }
 
-  return getMockRaidProgress();
+    const data = await response.json();
+    const progression = data.raid_progression || {};
+
+    // Get the raids in order (most recent first)
+    const raids = Object.entries(progression).map(([raidSlug, progress]) => ({
+      slug: raidSlug,
+      name: formatRaidName(raidSlug),
+      summary: progress.summary,
+      normalKills: progress.normal_bosses_killed,
+      heroicKills: progress.heroic_bosses_killed,
+      mythicKills: progress.mythic_bosses_killed,
+      totalBosses: progress.total_bosses,
+    }));
+
+    return {
+      raids: raids.slice(0, 4), // Show top 4 raids
+    };
+  } catch (error) {
+    console.error('Failed to fetch raid progress:', error);
+    return getMockRaidProgress();
+  }
+}
+
+/**
+ * Format raid slug to readable name
+ */
+function formatRaidName(slug) {
+  const names = {
+    'liberation-of-undermine': 'Liberation of Undermine',
+    'nerubar-palace': "Nerub'ar Palace",
+    'blackrock-depths': 'Blackrock Depths',
+    'amirdrassil-the-dreams-hope': "Amirdrassil",
+    'aberrus-the-shadowed-crucible': 'Aberrus',
+    'vault-of-the-incarnates': 'Vault of the Incarnates',
+    'manaforge-omega': 'Manaforge Omega',
+  };
+  return names[slug] || slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
 /**
@@ -190,54 +161,39 @@ export async function fetchAllWoWData() {
     profile,
     mythicPlus,
     raids,
-    isMockData: !accessToken,
+    isMockData: !profile.thumbnailUrl,
   };
 }
 
-// Mock data functions for when API is unavailable
-
+// Mock data functions for fallback
 function getMockCharacterProfile() {
   return {
     name: wow.characterName || 'Hero',
-    realm: wow.realm || 'Area-52',
-    class: 'Death Knight',
-    race: 'Blood Elf',
-    level: 80,
-    faction: 'Horde',
-    itemLevel: 623,
-    averageItemLevel: 625,
-    guild: 'Sample Guild',
-    lastLogin: Date.now(),
+    realm: wow.realm || 'Moon Guard',
+    class: 'Mage',
+    activeSpec: 'Arcane',
+    race: 'Void Elf',
+    faction: 'Alliance',
+    thumbnailUrl: null,
+    gear: { itemLevel: 720, itemLevelTotal: 720 },
   };
 }
 
 function getMockMythicPlusProfile() {
   return {
-    rating: 2847,
-    ratingColor: { r: 255, g: 128, b: 0 },
+    rating: 3500,
+    ratingColor: '#ff8000',
     bestRuns: [
-      { dungeon: 'The Stonevault', level: 12, completedInTime: true, duration: 1800000, affixes: ['Fortified', 'Entangling'] },
-      { dungeon: 'Mists of Tirna Scithe', level: 11, completedInTime: true, duration: 1650000, affixes: ['Tyrannical', 'Incorporeal'] },
-      { dungeon: 'The Dawnbreaker', level: 11, completedInTime: false, duration: 2100000, affixes: ['Fortified', 'Afflicted'] },
-      { dungeon: 'Ara-Kara', level: 10, completedInTime: true, duration: 1500000, affixes: ['Tyrannical', 'Spiteful'] },
-      { dungeon: 'City of Threads', level: 10, completedInTime: true, duration: 1700000, affixes: ['Fortified', 'Bursting'] },
+      { dungeon: 'Ara-Kara', shortName: 'AK', level: 17, score: 442, completedInTime: true, upgrades: 2 },
+      { dungeon: 'City of Threads', shortName: 'COT', level: 16, score: 430, completedInTime: true, upgrades: 1 },
     ],
   };
 }
 
 function getMockRaidProgress() {
   return {
-    expansionName: 'The War Within',
     raids: [
-      {
-        name: 'Nerub-ar Palace',
-        modes: [
-          { difficulty: 'LFR', status: 'COMPLETE', progress: '8/8' },
-          { difficulty: 'Normal', status: 'COMPLETE', progress: '8/8' },
-          { difficulty: 'Heroic', status: 'COMPLETE', progress: '8/8' },
-          { difficulty: 'Mythic', status: 'IN_PROGRESS', progress: '5/8' },
-        ],
-      },
+      { name: 'Liberation of Undermine', summary: '8/8 H', mythicKills: 0, heroicKills: 8, totalBosses: 8 },
     ],
   };
 }

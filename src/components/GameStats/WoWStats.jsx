@@ -8,85 +8,93 @@ const styles = {
     padding: '24px',
     color: '#e0e0e0',
     fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-    maxWidth: '600px',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
     border: '1px solid #1a1a1a',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '16px',
     marginBottom: '20px',
+    paddingBottom: '16px',
     borderBottom: '2px solid #ff8000',
-    paddingBottom: '12px',
   },
-  logo: {
-    width: '40px',
-    height: '40px',
-    backgroundColor: '#ff8000',
+  avatar: {
+    width: '64px',
+    height: '64px',
     borderRadius: '8px',
+    border: '2px solid #ff8000',
+    objectFit: 'cover',
+  },
+  avatarFallback: {
+    width: '64px',
+    height: '64px',
+    borderRadius: '8px',
+    backgroundColor: '#ff8000',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '20px',
+    fontSize: '24px',
     fontWeight: 'bold',
     color: '#1a1a2e',
   },
+  headerInfo: {
+    flex: 1,
+  },
   title: {
     margin: 0,
-    fontSize: '24px',
+    fontSize: '20px',
     fontWeight: '600',
     color: '#ffffff',
   },
-  mockBadge: {
-    backgroundColor: '#4a4a6a',
-    color: '#a0a0c0',
-    padding: '4px 8px',
+  subtitle: {
+    margin: '4px 0 0 0',
+    fontSize: '14px',
+    color: '#888',
+  },
+  specBadge: {
+    display: 'inline-block',
+    padding: '4px 10px',
     borderRadius: '4px',
     fontSize: '12px',
-    marginLeft: 'auto',
+    fontWeight: '600',
+    backgroundColor: '#1a1a1a',
+    color: '#ff8000',
+    marginTop: '6px',
   },
   section: {
     marginBottom: '20px',
   },
   sectionTitle: {
-    fontSize: '14px',
-    color: '#888',
+    fontSize: '13px',
+    color: '#666',
     textTransform: 'uppercase',
     letterSpacing: '1px',
     marginBottom: '12px',
   },
-  characterInfo: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
+  statsRow: {
+    display: 'flex',
     gap: '12px',
+    marginBottom: '16px',
   },
-  infoCard: {
+  statCard: {
+    flex: 1,
     backgroundColor: '#0a0a0a',
-    padding: '12px',
+    padding: '16px',
     borderRadius: '8px',
     border: '1px solid #1a1a1a',
+    textAlign: 'center',
   },
-  infoLabel: {
+  statLabel: {
     fontSize: '11px',
-    color: '#888',
+    color: '#666',
     textTransform: 'uppercase',
     marginBottom: '4px',
   },
-  infoValue: {
-    fontSize: '18px',
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-  itemLevel: {
-    fontSize: '32px',
+  statValue: {
+    fontSize: '24px',
     fontWeight: 'bold',
-    color: '#a335ee',
-  },
-  mplusRating: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
+    color: '#ffffff',
   },
   ratingValue: {
     fontSize: '28px',
@@ -95,13 +103,13 @@ const styles = {
   dungeonList: {
     listStyle: 'none',
     padding: 0,
-    margin: '12px 0 0 0',
+    margin: 0,
   },
   dungeonItem: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '8px 12px',
+    padding: '10px 12px',
     backgroundColor: '#0a0a0a',
     borderRadius: '6px',
     marginBottom: '6px',
@@ -109,100 +117,86 @@ const styles = {
   },
   dungeonName: {
     flex: 1,
+    fontSize: '14px',
   },
   keyLevel: {
     fontWeight: 'bold',
-    marginLeft: '12px',
-    padding: '2px 8px',
+    padding: '3px 10px',
     borderRadius: '4px',
     backgroundColor: '#1a1a1a',
+    marginLeft: '12px',
+    fontSize: '14px',
   },
-  timedBadge: {
-    color: '#00ff00',
+  upgrades: {
     marginLeft: '8px',
     fontSize: '12px',
   },
-  depletedBadge: {
-    color: '#ff4444',
-    marginLeft: '8px',
-    fontSize: '12px',
-  },
-  raidProgress: {
-    marginTop: '12px',
-  },
-  raidName: {
-    fontSize: '16px',
-    fontWeight: '600',
+  raidCard: {
+    backgroundColor: '#0a0a0a',
+    padding: '12px 16px',
+    borderRadius: '8px',
+    border: '1px solid #1a1a1a',
     marginBottom: '8px',
-    color: '#ffffff',
-  },
-  difficultyRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '6px 12px',
-    backgroundColor: '#0a0a0a',
-    borderRadius: '4px',
-    marginBottom: '4px',
+    alignItems: 'center',
   },
-  difficultyName: {
-    color: '#888',
+  raidName: {
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#ffffff',
   },
-  progressComplete: {
-    color: '#00ff00',
-  },
-  progressIncomplete: {
-    color: '#ffaa00',
+  raidProgress: {
+    fontSize: '14px',
+    fontWeight: '600',
   },
   loading: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '40px',
+    padding: '60px 40px',
     color: '#888',
   },
   spinner: {
     width: '24px',
     height: '24px',
-    border: '3px solid #3a3a5a',
+    border: '3px solid #1a1a1a',
     borderTop: '3px solid #ff8000',
     borderRadius: '50%',
     animation: 'spin 1s linear infinite',
     marginRight: '12px',
   },
   error: {
-    backgroundColor: '#3a2020',
+    backgroundColor: '#1a0a0a',
     border: '1px solid #ff4444',
     borderRadius: '8px',
     padding: '16px',
     color: '#ff8888',
     textAlign: 'center',
   },
-  errorTitle: {
-    fontWeight: 'bold',
-    marginBottom: '8px',
-  },
-  retryButton: {
+  link: {
+    display: 'inline-block',
+    marginTop: '16px',
+    padding: '10px 20px',
     backgroundColor: '#ff8000',
-    color: '#1a1a2e',
-    border: 'none',
-    padding: '8px 16px',
+    color: '#000',
+    textDecoration: 'none',
     borderRadius: '6px',
-    cursor: 'pointer',
     fontWeight: '600',
-    marginTop: '12px',
+    fontSize: '14px',
   },
 };
 
 // Add keyframes for spinner
-const styleSheet = document.createElement('style');
-styleSheet.textContent = `
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`;
 if (typeof document !== 'undefined' && !document.getElementById('wow-stats-styles')) {
+  const styleSheet = document.createElement('style');
   styleSheet.id = 'wow-stats-styles';
+  styleSheet.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
   document.head.appendChild(styleSheet);
 }
 
@@ -228,12 +222,18 @@ function WoWStats() {
     loadData();
   }, []);
 
-  const getRatingColor = (rating) => {
-    if (rating >= 3000) return '#ff8000'; // Orange (Mythic)
-    if (rating >= 2500) return '#a335ee'; // Epic Purple
-    if (rating >= 2000) return '#0070dd'; // Rare Blue
-    if (rating >= 1500) return '#1eff00'; // Uncommon Green
-    return '#ffffff'; // Common White
+  const getProgressColor = (summary) => {
+    if (summary?.includes('M')) return '#ff8000'; // Mythic - orange
+    if (summary?.includes('H')) return '#a335ee'; // Heroic - purple
+    if (summary?.includes('N')) return '#1eff00'; // Normal - green
+    return '#888';
+  };
+
+  const getUpgradeSymbol = (upgrades) => {
+    if (upgrades >= 3) return '+++';
+    if (upgrades === 2) return '++';
+    if (upgrades === 1) return '+';
+    return '';
   };
 
   if (loading) {
@@ -241,7 +241,7 @@ function WoWStats() {
       <div style={styles.container}>
         <div style={styles.loading}>
           <div style={styles.spinner}></div>
-          Loading WoW character data...
+          Loading Raider.io data...
         </div>
       </div>
     );
@@ -251,9 +251,9 @@ function WoWStats() {
     return (
       <div style={styles.container}>
         <div style={styles.error}>
-          <div style={styles.errorTitle}>Error Loading Data</div>
+          <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>Error Loading Data</div>
           <div>{error}</div>
-          <button style={styles.retryButton} onClick={loadData}>
+          <button style={{ ...styles.link, cursor: 'pointer', border: 'none' }} onClick={loadData}>
             Retry
           </button>
         </div>
@@ -261,101 +261,88 @@ function WoWStats() {
     );
   }
 
-  if (!data) {
-    return null;
-  }
+  if (!data) return null;
 
-  const { profile, mythicPlus, raids, isMockData } = data;
+  const { profile, mythicPlus, raids } = data;
 
   return (
     <div style={styles.container}>
+      {/* Header with Character Avatar */}
       <div style={styles.header}>
-        <div style={styles.logo}>W</div>
-        <h2 style={styles.title}>World of Warcraft</h2>
-        {isMockData && <span style={styles.mockBadge}>Demo Data</span>}
+        {profile.thumbnailUrl ? (
+          <img
+            src={profile.thumbnailUrl}
+            alt={profile.name}
+            style={styles.avatar}
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'flex';
+            }}
+          />
+        ) : null}
+        <div style={{ ...styles.avatarFallback, display: profile.thumbnailUrl ? 'none' : 'flex' }}>
+          {profile.name?.[0] || 'W'}
+        </div>
+        <div style={styles.headerInfo}>
+          <h2 style={styles.title}>{profile.name}</h2>
+          <p style={styles.subtitle}>
+            {profile.race} {profile.class} • {profile.realm}
+          </p>
+          <span style={styles.specBadge}>{profile.activeSpec} {profile.activeRole}</span>
+        </div>
       </div>
 
-      {/* Character Info */}
-      <div style={styles.section}>
-        <div style={styles.sectionTitle}>Character</div>
-        <div style={styles.characterInfo}>
-          <div style={styles.infoCard}>
-            <div style={styles.infoLabel}>Name</div>
-            <div style={styles.infoValue}>{profile.name}</div>
+      {/* Item Level & M+ Score */}
+      <div style={styles.statsRow}>
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>Item Level</div>
+          <div style={{ ...styles.statValue, color: '#a335ee' }}>
+            {profile.gear?.itemLevel || 0}
           </div>
-          <div style={styles.infoCard}>
-            <div style={styles.infoLabel}>Realm</div>
-            <div style={styles.infoValue}>{profile.realm}</div>
-          </div>
-          <div style={styles.infoCard}>
-            <div style={styles.infoLabel}>Class</div>
-            <div style={styles.infoValue}>{profile.class}</div>
-          </div>
-          <div style={styles.infoCard}>
-            <div style={styles.infoLabel}>Item Level</div>
-            <div style={{ ...styles.infoValue, ...styles.itemLevel }}>
-              {profile.itemLevel}
-            </div>
+        </div>
+        <div style={styles.statCard}>
+          <div style={styles.statLabel}>M+ Rating</div>
+          <div style={{ ...styles.ratingValue, color: mythicPlus.ratingColor }}>
+            {Math.round(mythicPlus.rating)}
           </div>
         </div>
       </div>
 
-      {/* Mythic+ */}
+      {/* Best M+ Runs */}
       <div style={styles.section}>
-        <div style={styles.sectionTitle}>Mythic+ Season</div>
-        <div style={styles.infoCard}>
-          <div style={styles.mplusRating}>
-            <span style={styles.infoLabel}>Rating</span>
-            <span
-              style={{
-                ...styles.ratingValue,
-                color: getRatingColor(mythicPlus.rating),
-              }}
-            >
-              {mythicPlus.rating.toFixed(0)}
-            </span>
-          </div>
-          <ul style={styles.dungeonList}>
-            {mythicPlus.bestRuns.map((run, index) => (
-              <li key={index} style={styles.dungeonItem}>
-                <span style={styles.dungeonName}>{run.dungeon}</span>
-                <span style={styles.keyLevel}>+{run.level}</span>
-                {run.completedInTime ? (
-                  <span style={styles.timedBadge}>Timed</span>
-                ) : (
-                  <span style={styles.depletedBadge}>Depleted</span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <div style={styles.sectionTitle}>Best Mythic+ Runs</div>
+        <ul style={styles.dungeonList}>
+          {mythicPlus.bestRuns?.slice(0, 5).map((run, index) => (
+            <li key={index} style={styles.dungeonItem}>
+              <span style={styles.dungeonName}>{run.shortName || run.dungeon}</span>
+              <span style={styles.keyLevel}>+{run.level}</span>
+              <span style={{ ...styles.upgrades, color: run.completedInTime ? '#1eff00' : '#ff4444' }}>
+                {run.completedInTime ? getUpgradeSymbol(run.upgrades) : '✗'}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
 
       {/* Raid Progress */}
       <div style={styles.section}>
-        <div style={styles.sectionTitle}>Raid Progress - {raids.expansionName}</div>
-        <div style={styles.raidProgress}>
-          {raids.raids.map((raid, index) => (
-            <div key={index} style={styles.infoCard}>
-              <div style={styles.raidName}>{raid.name}</div>
-              {raid.modes.map((mode, modeIndex) => (
-                <div key={modeIndex} style={styles.difficultyRow}>
-                  <span style={styles.difficultyName}>{mode.difficulty}</span>
-                  <span
-                    style={
-                      mode.status === 'COMPLETE'
-                        ? styles.progressComplete
-                        : styles.progressIncomplete
-                    }
-                  >
-                    {mode.progress}
-                  </span>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <div style={styles.sectionTitle}>Raid Progression</div>
+        {raids.raids?.slice(0, 3).map((raid, index) => (
+          <div key={index} style={styles.raidCard}>
+            <span style={styles.raidName}>{raid.name}</span>
+            <span style={{ ...styles.raidProgress, color: getProgressColor(raid.summary) }}>
+              {raid.summary}
+            </span>
+          </div>
+        ))}
       </div>
+
+      {/* Raider.io Link */}
+      {profile.profileUrl && (
+        <a href={profile.profileUrl} target="_blank" rel="noopener noreferrer" style={styles.link}>
+          View on Raider.io
+        </a>
+      )}
     </div>
   );
 }

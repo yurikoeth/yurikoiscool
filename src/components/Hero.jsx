@@ -9,17 +9,10 @@ const Hero = () => {
     <section className="hero">
       <div className="hero__container">
         <div className="hero__content">
-          <p className="hero__subtitle">Digital Creator & Collector</p>
 
           <h1 className="hero__title">
             <span className="hero__title-line">Yuriko</span>
           </h1>
-
-          <p className="hero__tagline">
-            Exploring the intersection of gaming and digital art.
-            Curating rare NFTs and building immersive experiences
-            in the metaverse.
-          </p>
 
           <div className="hero__cta-group">
             <a href="#nfts" className="hero__cta hero__cta--primary">

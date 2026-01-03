@@ -1,93 +1,98 @@
 import { config } from '../config.js';
 
 /**
- * Fetches NFTs owned by a wallet address using Reservoir API (free, no key needed)
- * Falls back to Alchemy if key is configured
+ * Fetches NFTs owned by a wallet address using Ankr API (free, no key needed)
  * @param {string} walletAddress - The wallet address to fetch NFTs for
- * @param {string} continuation - Pagination token
- * @param {number} limit - Number of NFTs per page (max 100)
- * @returns {Promise<{nfts: Array, continuation: string|null}>}
+ * @param {string} pageToken - Pagination token
+ * @param {number} pageSize - Number of NFTs per page
+ * @returns {Promise<{nfts: Array, pageToken: string|null}>}
  */
-export async function fetchNFTsForWallet(walletAddress = null, continuation = null, limit = 50) {
+export async function fetchNFTsForWallet(walletAddress = null, pageToken = null, pageSize = 50) {
   const address = walletAddress || config.wallet.address;
 
   if (!address || address === '0x0000000000000000000000000000000000000000') {
-    throw new Error('Wallet address is not configured. Please add your wallet address to config.js');
+    throw new Error('Wallet address is not configured');
   }
 
-  // Use Reservoir API (free, no key required)
-  const params = new URLSearchParams({
-    limit: String(Math.min(limit, 100)),
-    includeAttributes: 'true',
-  });
-
-  if (continuation) {
-    params.append('continuation', continuation);
-  }
-
-  const url = `https://api.reservoir.tools/users/${address}/tokens/v10?${params.toString()}`;
-
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
+  // Use Ankr API (free, no key required for basic usage)
+  const requestBody = {
+    jsonrpc: '2.0',
+    method: 'ankr_getNFTsByOwner',
+    params: {
+      blockchain: 'eth',
+      walletAddress: address,
+      pageSize,
+      ...(pageToken && { pageToken }),
     },
+    id: 1,
+  };
+
+  const response = await fetch('https://rpc.ankr.com/multichain', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(requestBody),
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Reservoir API error: ${response.status} - ${errorText}`);
+    throw new Error(`API error: ${response.status}`);
   }
 
   const data = await response.json();
 
-  // Transform Reservoir response to match our expected format
-  const nfts = (data.tokens || []).map(item => ({
+  if (data.error) {
+    throw new Error(data.error.message || 'API error');
+  }
+
+  const result = data.result || {};
+
+  // Transform Ankr response to match our expected format
+  const nfts = (result.assets || []).map(item => ({
     contract: {
-      address: item.token?.contract,
-      name: item.token?.collection?.name,
+      address: item.contractAddress,
+      name: item.collectionName,
     },
-    tokenId: item.token?.tokenId,
-    name: item.token?.name || `#${item.token?.tokenId}`,
-    description: item.token?.description,
+    tokenId: item.tokenId,
+    name: item.name || `#${item.tokenId}`,
+    description: item.description,
     image: {
-      cachedUrl: item.token?.imageSmall || item.token?.image,
-      thumbnailUrl: item.token?.imageSmall,
-      originalUrl: item.token?.image,
+      cachedUrl: item.imageUrl,
+      thumbnailUrl: item.imageUrl,
+      originalUrl: item.imageUrl,
     },
     collection: {
-      name: item.token?.collection?.name,
-      slug: item.token?.collection?.slug,
+      name: item.collectionName,
+      slug: item.symbol,
     },
     raw: item,
   }));
 
   return {
     nfts,
-    continuation: data.continuation || null,
+    pageToken: result.nextPageToken || null,
   };
 }
 
 /**
  * Fetches all NFTs for a wallet by handling pagination automatically
  * @param {string} walletAddress - The wallet address to fetch NFTs for
- * @param {number} maxNFTs - Maximum number of NFTs to fetch (default 200)
+ * @param {number} maxNFTs - Maximum number of NFTs to fetch
  * @returns {Promise<Array>} Array of all NFTs
  */
 export async function fetchAllNFTs(walletAddress = null, maxNFTs = 200) {
   const allNFTs = [];
-  let continuation = null;
+  let pageToken = null;
 
   do {
-    const result = await fetchNFTsForWallet(walletAddress, continuation);
+    const result = await fetchNFTsForWallet(walletAddress, pageToken);
     allNFTs.push(...result.nfts);
-    continuation = result.continuation;
+    pageToken = result.pageToken;
 
-    // Stop if we've reached the max limit
     if (allNFTs.length >= maxNFTs) {
       break;
     }
-  } while (continuation);
+  } while (pageToken);
 
   return allNFTs.slice(0, maxNFTs);
 }
@@ -95,14 +100,12 @@ export async function fetchAllNFTs(walletAddress = null, maxNFTs = 200) {
 /**
  * Extracts the best available image URL from an NFT object
  * @param {Object} nft - The NFT object
- * @returns {string|null} The image URL or null if not available
+ * @returns {string|null} The image URL or null
  */
 export function getNFTImageUrl(nft) {
   const image = nft.image;
-
   if (!image) return null;
 
-  // Prefer cached/gateway URLs for better loading performance
   return (
     image.cachedUrl ||
     image.thumbnailUrl ||
