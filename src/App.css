@@ -172,6 +172,16 @@
   font-style: italic;
 }
 
+.hero__quote {
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  max-width: 520px;
+  margin-bottom: var(--spacing-xl);
+  opacity: 0.85;
+}
+
 .hero__tagline {
   font-size: 1.125rem;
   line-height: 1.8;
@@ -475,38 +485,7 @@
   gap: var(--spacing-xl);
 }
 
-/* Game stat cards - full width with max-height and internal scroll */
+/* Game stat cards - full width */
 .games-grid > * {
   width: 100%;
-  max-height: none; /* Mobile: no height restriction */
-}
-
-@media (min-width: 768px) {
-  .games-grid > * {
-    max-height: 600px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /* Smooth scrolling */
-    scroll-behavior: smooth;
-    /* Custom scrollbar */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
-  }
-
-  .games-grid > *::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .games-grid > *::-webkit-scrollbar-track {
-    background: transparent;
-  }
-
-  .games-grid > *::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 3px;
-  }
-
-  .games-grid > *::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-  }
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchAllPOE2Data, formatExperience, getClassInfo } from '../../services/poe.js';
 
 // POE2 cover art background
-const POE2_COVER_ART = 'https://web.poecdn.com/public/news/2024-11-14/POE2Header.jpg';
+const POE2_COVER_ART = 'https://upload.wikimedia.org/wikipedia/en/2/22/Path_of_Exile_2_cover_art.jpg';
 
 const styles = {
   container: {

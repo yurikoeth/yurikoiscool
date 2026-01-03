@@ -14,6 +14,10 @@ const Hero = () => {
             <span className="hero__title-line">Yuriko</span>
           </h1>
 
+          <p className="hero__quote">
+            "Our goal must be the infinite and not the finite. The Infinity is our homeland. We are always expected in Heaven."
+          </p>
+
           <div className="hero__cta-group">
             <a href="#nfts" className="hero__cta hero__cta--primary">
               View Collection

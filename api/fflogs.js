@@ -94,7 +94,7 @@ export default async function handler(req, res) {
             }
             lodestoneID
             savage: zoneRankings(difficulty: 101)
-            extreme: zoneRankings(difficulty: 100)
+            normal: zoneRankings(difficulty: 100)
             ultimate: zoneRankings(difficulty: 100, partition: 1)
           }
         }
@@ -150,7 +150,7 @@ export default async function handler(req, res) {
         characterName: character.name,
         lodestoneId: character.lodestoneID,
         savage: processRankings(character.savage, 'Savage'),
-        extreme: processRankings(character.extreme, 'Extreme'),
+        normal: processRankings(character.normal, 'Normal'),
         ultimate: processRankings(character.ultimate, 'Ultimate'),
       },
       profileUrl: `https://www.fflogs.com/character/id/${CHARACTER_ID}`,

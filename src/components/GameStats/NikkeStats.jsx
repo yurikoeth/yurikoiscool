@@ -2,8 +2,7 @@ import React from 'react';
 import { config } from '../../config.js';
 
 // Nikke cover art
-const NIKKE_COVER_ART = 'https://nikke-goddess-of-victory-international.fandom.com/wiki/GODDESS_OF_VICTORY:_NIKKE_Wiki?file=1st+Anniversary+Wallpaper.png';
-const NIKKE_COVER_ALT = 'https://play-lh.googleusercontent.com/VCLS-SvT_GFb5gL4VcQJgHoYHT3d_kxd1FVD0qbvR8E_kQ-T_sWpHoQyLZQzqHPqHw';
+const NIKKE_COVER_ART = 'https://upload.wikimedia.org/wikipedia/en/5/52/Goddess_of_Victory_Nikke_logo.png';
 
 const styles = {
   container: {
@@ -23,7 +22,7 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundImage: `url(${NIKKE_COVER_ALT})`,
+    backgroundImage: `url(${NIKKE_COVER_ART})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     opacity: 0.08,

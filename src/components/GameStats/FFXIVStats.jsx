@@ -19,7 +19,7 @@ export default function FFXIVStats() {
   const [loading, setLoading] = useState(true);
   const [logsLoading, setLogsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [selectedDifficulty, setSelectedDifficulty] = useState('extreme');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('normal');
 
   useEffect(() => {
     async function loadCharacter() {
@@ -209,14 +209,14 @@ export default function FFXIVStats() {
           <>
             {/* Difficulty Tabs */}
             <div className="ffxiv-difficulty-tabs">
-              {['savage', 'extreme', 'ultimate'].map((diff) => (
+              {['normal', 'savage', 'ultimate'].map((diff) => (
                 <button
                   key={diff}
                   onClick={() => setSelectedDifficulty(diff)}
                   className={`ffxiv-diff-tab ${selectedDifficulty === diff ? 'ffxiv-diff-tab--active' : ''}`}
                   style={selectedDifficulty === diff ? {
                     color: diff === 'ultimate' ? '#e5cc80' :
-                           diff === 'savage' ? '#ff8000' : '#a335ee'
+                           diff === 'savage' ? '#ff8000' : '#1eff00'
                   } : {}}
                 >
                   {diff.charAt(0).toUpperCase() + diff.slice(1)}

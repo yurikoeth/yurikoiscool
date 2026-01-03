@@ -144,7 +144,6 @@ export default function NFTGallery() {
   if (error) {
     return (
       <div className="nft-gallery-container">
-        <h2 className="nft-gallery-title">NFT Collection</h2>
         <div className="nft-error">
           <p>Failed to load NFTs</p>
           <p className="nft-error-detail">{error}</p>

@@ -3,7 +3,7 @@ import { fetchAllWoWData } from '../../services/blizzard.js';
 import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
 
 // WoW The War Within cover art
-const WOW_COVER_ART = 'https://bnetcmsus-a.akamaihd.net/cms/blog_header/ci/CIGLT96ADILX1709251628498.jpg';
+const WOW_COVER_ART = 'https://upload.wikimedia.org/wikipedia/en/b/b7/World_of_Warcraft_The_War_Within_cover_art.jpg';
 
 const styles = {
   container: {
