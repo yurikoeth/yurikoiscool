@@ -22,33 +22,37 @@ export default function FFXIVStats() {
   const [selectedDifficulty, setSelectedDifficulty] = useState('normal');
 
   useEffect(() => {
+    let ignore = false;
+
     async function loadCharacter() {
       try {
         setLoading(true);
         setError(null);
 
         const data = await getConfiguredCharacter();
+        if (ignore) return;
         setCharacterData(data);
 
         // Load FFLogs data
         setLogsLoading(true);
         try {
           const logs = await fetchAllFFLogsData();
-          setLogsData(logs);
+          if (!ignore) setLogsData(logs);
         } catch (logsErr) {
           console.error('Failed to load FFLogs data:', logsErr);
         } finally {
-          setLogsLoading(false);
+          if (!ignore) setLogsLoading(false);
         }
       } catch (err) {
         console.error('Failed to load FFXIV character:', err);
-        setError(err.message || 'Failed to load character data');
+        if (!ignore) setError(err.message || 'Failed to load character data');
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     }
 
     loadCharacter();
+    return () => { ignore = true; };
   }, []);
 
   if (loading) {

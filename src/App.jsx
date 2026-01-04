@@ -10,37 +10,54 @@ import NikkeStats from './components/GameStats/NikkeStats'
 import ArcRaidersStats from './components/GameStats/ArcRaidersStats'
 import Footer from './components/Footer'
 import MusicPlayer from './components/MusicPlayer'
+import ErrorBoundary from './components/ErrorBoundary'
 
 function App() {
   return (
-    <div className="app">
-      <Header />
-      <main>
-        <Hero />
+    <ErrorBoundary name="Application">
+      <div className="app">
+        <Header />
+        <main>
+          <Hero />
 
-        <section id="nfts" className="section">
-          <div className="section__container">
-            <NFTGallery />
-          </div>
-        </section>
-
-        <section id="games" className="section section--alt">
-          <div className="section__container">
-
-            <div className="games-grid">
-              <SteamStats />
-              <FFXIVStats />
-              <WoWStats />
-              <POE2Stats />
-              <NikkeStats />
-              <ArcRaidersStats />
+          <section id="nfts" className="section">
+            <div className="section__container">
+              <ErrorBoundary name="NFT Gallery">
+                <NFTGallery />
+              </ErrorBoundary>
             </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
-      <MusicPlayer />
-    </div>
+          </section>
+
+          <section id="games" className="section section--alt">
+            <div className="section__container">
+
+              <div className="games-grid">
+                <ErrorBoundary name="Steam Stats">
+                  <SteamStats />
+                </ErrorBoundary>
+                <ErrorBoundary name="FFXIV Stats">
+                  <FFXIVStats />
+                </ErrorBoundary>
+                <ErrorBoundary name="WoW Stats">
+                  <WoWStats />
+                </ErrorBoundary>
+                <ErrorBoundary name="POE2 Stats">
+                  <POE2Stats />
+                </ErrorBoundary>
+                <ErrorBoundary name="Nikke Stats">
+                  <NikkeStats />
+                </ErrorBoundary>
+                <ErrorBoundary name="Arc Raiders Stats">
+                  <ArcRaidersStats />
+                </ErrorBoundary>
+              </div>
+            </div>
+          </section>
+        </main>
+        <Footer />
+        <MusicPlayer />
+      </div>
+    </ErrorBoundary>
   )
 }
 

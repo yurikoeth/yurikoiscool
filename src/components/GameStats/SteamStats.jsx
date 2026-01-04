@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchAllSteamData, hasValidCredentials } from '../../services/steam.js';
 import './SteamStats.css';
 
@@ -135,6 +135,7 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showAllGames, setShowAllGames] = useState(false);
+  const mountedRef = useRef(true);
 
   const loadData = async () => {
     setLoading(true);
@@ -142,16 +143,18 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
 
     try {
       const steamData = await fetchAllSteamData();
-      setData(steamData);
+      if (mountedRef.current) setData(steamData);
     } catch (err) {
-      setError(err.message || 'Failed to load Steam data');
+      if (mountedRef.current) setError(err.message || 'Failed to load Steam data');
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   };
 
   useEffect(() => {
+    mountedRef.current = true;
     loadData();
+    return () => { mountedRef.current = false; };
   }, []);
 
   if (loading) {
@@ -243,16 +246,6 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
           label="Total Playtime"
           value={formatPlaytime(totalPlaytimeHours)}
         />
-        <StatCard
-          icon={
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg>
-          }
-          label="Account Level"
-          value={profile.level}
-          subValue={profile.timeCreated ? `Since ${formatDate(profile.timeCreated)}` : null}
-        />
       </div>
 
       {/* Top Games by Playtime */}
@@ -264,7 +257,7 @@ const SteamStats = ({ topGamesCount = 5, showRecentGames = true }) => {
           Top Games by Playtime
         </h3>
         <div className="steam-games-list">
-          {topGames.map((game, index) => (
+          {topGames.map((game) => (
             <GameCard key={game.appId} game={game} />
           ))}
         </div>

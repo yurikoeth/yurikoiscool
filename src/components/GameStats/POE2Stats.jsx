@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { fetchAllPOE2Data, formatExperience, getClassInfo } from '../../services/poe.js';
 import './POE2Stats.css';
 
@@ -227,22 +227,25 @@ function POE2Stats() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const mountedRef = useRef(true);
 
   const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
       const poeData = await fetchAllPOE2Data();
-      setData(poeData);
+      if (mountedRef.current) setData(poeData);
     } catch (err) {
-      setError(err.message || 'Failed to load POE2 data');
+      if (mountedRef.current) setError(err.message || 'Failed to load POE2 data');
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   };
 
   useEffect(() => {
+    mountedRef.current = true;
     loadData();
+    return () => { mountedRef.current = false; };
   }, []);
 
   const getClassInitial = (className) => {
@@ -294,7 +297,6 @@ function POE2Stats() {
   const sortedCharacters = [...characters].sort((a, b) => b.level - a.level);
 
   // Calculate stats
-  const totalLevels = characters.reduce((sum, char) => sum + char.level, 0);
   const highestLevel = Math.max(...characters.map(c => c.level));
   const challengeLeagueChars = characters.filter(c => c.league === currentLeague?.name).length;
 

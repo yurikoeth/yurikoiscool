@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchRaids, calculateStats } from '../../services/arcraiders';
 import RaidLogger from './RaidLogger';
 import './ArcRaidersStats.css';
@@ -10,17 +10,21 @@ const ArcRaidersStats = () => {
   const [isDemo, setIsDemo] = useState(false);
   const [showLogger, setShowLogger] = useState(false);
   const [expandedRaid, setExpandedRaid] = useState(null);
+  const mountedRef = useRef(true);
 
   // Only show admin controls with ?admin=true in URL
   const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'true';
 
   useEffect(() => {
+    mountedRef.current = true;
     loadRaids();
+    return () => { mountedRef.current = false; };
   }, []);
 
   const loadRaids = async () => {
     setLoading(true);
     const { data, error, isDemo: demo } = await fetchRaids();
+    if (!mountedRef.current) return;
     if (error) setError(error.message);
     setRaids(data || []);
     setIsDemo(demo);

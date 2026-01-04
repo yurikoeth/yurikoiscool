@@ -2,16 +2,12 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { name: 'Twitter', href: '#', icon: 'X' },
-    { name: 'Discord', href: '#', icon: 'D' },
-    { name: 'OpenSea', href: '#', icon: 'OS' },
-    { name: 'GitHub', href: '#', icon: 'GH' },
+    { name: 'Twitter', href: 'https://x.com/yurikoeth', icon: 'X' },
+    { name: 'Discord', href: 'https://discord.com/users/yurikoeth', icon: 'D' },
+    { name: 'OpenSea', href: 'https://opensea.io/yurikoeth', icon: 'OS' },
   ];
 
-  const footerLinks = [
-    { name: 'Privacy', href: '#' },
-    { name: 'Terms', href: '#' },
-  ];
+  const footerLinks = [];
 
   return (
     <footer className="footer">
@@ -31,6 +27,8 @@ const Footer = () => {
               <a
                 key={link.name}
                 href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="footer__social-link"
                 aria-label={link.name}
               >

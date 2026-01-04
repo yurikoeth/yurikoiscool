@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { fetchAllWoWData } from '../../services/blizzard.js';
 import { fetchAllWarcraftLogsData, getParseColor, isWarcraftLogsConfigured } from '../../services/warcraftlogs.js';
 import './WoWStats.css';
@@ -485,12 +485,14 @@ function WoWStats() {
   const [logsLoading, setLogsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState('heroic');
+  const mountedRef = useRef(true);
 
   const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
       const wowData = await fetchAllWoWData();
+      if (!mountedRef.current) return;
       setData(wowData);
 
       // Load Warcraft Logs data if configured
@@ -498,23 +500,25 @@ function WoWStats() {
         setLogsLoading(true);
         try {
           const logs = await fetchAllWarcraftLogsData();
-          setLogsData(logs);
+          if (mountedRef.current) setLogsData(logs);
         } catch (logsErr) {
           console.error('Failed to load Warcraft Logs data:', logsErr);
           // Don't fail the whole component if logs fail
         } finally {
-          setLogsLoading(false);
+          if (mountedRef.current) setLogsLoading(false);
         }
       }
     } catch (err) {
-      setError(err.message || 'Failed to load WoW data');
+      if (mountedRef.current) setError(err.message || 'Failed to load WoW data');
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   };
 
   useEffect(() => {
+    mountedRef.current = true;
     loadData();
+    return () => { mountedRef.current = false; };
   }, []);
 
   const getProgressColor = (summary) => {

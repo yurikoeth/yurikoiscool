@@ -1,8 +1,8 @@
 const Hero = () => {
   const socialLinks = [
-    { name: 'Twitter', href: '#', icon: 'X' },
-    { name: 'Discord', href: '#', icon: 'D' },
-    { name: 'OpenSea', href: '#', icon: 'OS' },
+    { name: 'Twitter', href: 'https://x.com/yurikoeth', icon: 'X' },
+    { name: 'Discord', href: 'https://discord.com/users/yurikoeth', icon: 'D' },
+    { name: 'OpenSea', href: 'https://opensea.io/yurikoeth', icon: 'OS' },
   ];
 
   return (
@@ -18,20 +18,13 @@ const Hero = () => {
             "Our goal must be the infinite and not the finite. The Infinity is our homeland. We are always expected in Heaven."
           </p>
 
-          <div className="hero__cta-group">
-            <a href="#nfts" className="hero__cta hero__cta--primary">
-              View Collection
-            </a>
-            <a href="#about" className="hero__cta hero__cta--secondary">
-              View Games
-            </a>
-          </div>
-
           <div className="hero__social">
             {socialLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hero__social-link"
                 aria-label={link.name}
               >

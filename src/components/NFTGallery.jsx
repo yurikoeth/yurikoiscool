@@ -117,20 +117,23 @@ export default function NFTGallery() {
   const [selectedNft, setSelectedNft] = useState(null);
 
   useEffect(() => {
+    let ignore = false;
+
     async function loadNFTs() {
       try {
         setLoading(true);
         setError(null);
         const fetchedNFTs = await fetchAllNFTs();
-        setNfts(fetchedNFTs);
+        if (!ignore) setNfts(fetchedNFTs);
       } catch (err) {
-        setError(err.message);
+        if (!ignore) setError(err.message);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
     }
 
     loadNFTs();
+    return () => { ignore = true; };
   }, []);
 
   const handleCardClick = (nft) => {
