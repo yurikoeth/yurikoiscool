@@ -20,10 +20,6 @@ const Hero = () => {
             "Our goal must be the infinite and not the finite. The Infinity is our homeland. We are always expected in Heaven."
           </p>
 
-          <h1 className="hero__title">
-            <span className="hero__title-line">— Yuriko</span>
-          </h1>
-
           <div className="hero__social">
             {socialLinks.map((link) => (
               <a
