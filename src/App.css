@@ -165,6 +165,9 @@
 .hero__title-line {
   display: block;
   color: var(--color-text-primary);
+  font-family: 'Great Vibes', cursive;
+  font-size: 4rem;
+  font-weight: 400;
 }
 
 .hero__title-line--accent {
