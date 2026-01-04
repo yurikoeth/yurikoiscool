@@ -34,9 +34,7 @@ const Header = () => {
           </ul>
         </nav>
 
-        <button className="header__cta">
-          Connect
-        </button>
+
       </div>
     </header>
   );
