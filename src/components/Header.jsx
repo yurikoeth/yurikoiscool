@@ -13,9 +13,10 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: 'NFTs', href: '#nfts' },
+    { name: 'Home', href: '#' },
+    { name: 'Collection', href: '#nfts' },
     { name: 'Games', href: '#games' },
-    { name: 'About', href: '#about' },
+    { name: 'Projects', href: '#projects' },
   ];
 
   return (
