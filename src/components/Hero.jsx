@@ -7,8 +7,14 @@ const Hero = () => {
 
   return (
     <section className="hero">
-      <div className="hero__container">
-        <div className="hero__content">
+      <div className="hero__container hero__container--centered">
+        <div className="hero__content hero__content--centered">
+
+          <img
+            src="/avatar.png"
+            alt="Yuriko avatar"
+            className="hero__avatar"
+          />
 
           <h1 className="hero__title">
             <span className="hero__title-line">Yuriko</span>
@@ -32,11 +38,6 @@ const Hero = () => {
               </a>
             ))}
           </div>
-        </div>
-
-        <div className="hero__visual">
-          <div className="hero__visual-shape"></div>
-          <div className="hero__visual-glow"></div>
         </div>
       </div>
     </section>
