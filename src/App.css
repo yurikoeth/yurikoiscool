@@ -290,10 +290,7 @@
 
 .hero__avatar {
   width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #000;
+  height: auto;
   margin-bottom: var(--spacing-lg);
 }
 
