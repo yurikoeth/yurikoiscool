@@ -22,10 +22,6 @@ const Header = () => {
   return (
     <header className={`header ${isScrolled ? 'header--scrolled' : ''}`}>
       <div className="header__container">
-        <a href="/" className="header__logo">
-          <span className="header__logo-text">Y</span>
-        </a>
-
         <nav className="header__nav">
           <ul className="header__nav-list">
             {navLinks.map((link) => (
