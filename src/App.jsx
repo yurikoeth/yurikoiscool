@@ -1,5 +1,4 @@
 import './App.css'
-import Header from './components/Header'
 import Hero from './components/Hero'
 import NFTGallery from './components/NFTGallery'
 import SteamStats from './components/GameStats/SteamStats'
@@ -16,7 +15,6 @@ function App() {
   return (
     <ErrorBoundary name="Application">
       <div className="app">
-        <Header />
         <main>
           <Hero />
 
