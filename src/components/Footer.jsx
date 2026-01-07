@@ -11,7 +11,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer__container">
         <p className="footer__copyright">
-          &copy; {currentYear} Yuriko Nakamura. All rights reserved.
+          &copy; {currentYear} Yuriko. All rights reserved.
         </p>
 
         <div className="footer__social">
