@@ -1,9 +1,7 @@
 // XIVAPI Service for FFXIV character data
-// XIVAPI is CORS-friendly and does not require an API key for basic lookups
+// Uses serverless proxy to avoid CORS issues
 
 import { config } from '../config.js';
-
-const BASE_URL = config.apis.xivapi;
 
 /**
  * Search for a character by name and server
@@ -12,11 +10,14 @@ const BASE_URL = config.apis.xivapi;
  * @returns {Promise<Object|null>} - Character search result or null
  */
 export async function searchCharacter(name, server) {
-  const encodedName = encodeURIComponent(name);
-  const url = `${BASE_URL}/character/search?name=${encodedName}&server=${server}`;
+  const params = new URLSearchParams({
+    action: 'search',
+    name,
+    server,
+  });
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(`/api/ffxiv?${params}`);
 
     if (!response.ok) {
       throw new Error(`XIVAPI search failed: ${response.status}`);
@@ -45,10 +46,13 @@ export async function searchCharacter(name, server) {
  * @returns {Promise<Object>} - Full character details
  */
 export async function fetchCharacterDetails(lodestoneId) {
-  const url = `${BASE_URL}/character/${lodestoneId}?extended=1&data=FC`;
+  const params = new URLSearchParams({
+    action: 'character',
+    id: lodestoneId.toString(),
+  });
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(`/api/ffxiv?${params}`);
 
     if (!response.ok) {
       throw new Error(`XIVAPI character fetch failed: ${response.status}`);
