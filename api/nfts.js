@@ -48,12 +48,21 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
+    // Collections to hide
+    const hiddenCollections = ['micent', 'van gogh'];
+
     // Transform Alchemy response to match existing format
     const nfts = (data.ownedNfts || [])
       .filter(nft => {
         // Filter out spam NFTs
         const spamInfo = nft.contract?.spamClassifications || [];
-        return spamInfo.length === 0;
+        if (spamInfo.length > 0) return false;
+
+        // Filter out hidden collections
+        const collectionName = (nft.contract?.name || nft.contract?.openSeaMetadata?.collectionName || '').toLowerCase();
+        if (hiddenCollections.some(hidden => collectionName.includes(hidden.toLowerCase()))) return false;
+
+        return true;
       })
       .map(nft => ({
         contract: {
