@@ -18,27 +18,45 @@ export default async function handler(req, res) {
   try {
     let url;
 
-    if (action === 'search') {
+    if (action === 'search' && name && server) {
       // Search for character
       const encodedName = encodeURIComponent(name);
-      url = `${XIVAPI_BASE}/character/search?name=${encodedName}&server=${server}`;
+      url = `${XIVAPI_BASE}/character/search?name=${encodedName}&server=${encodeURIComponent(server)}`;
     } else if (action === 'character' && id) {
       // Get character details
-      url = `${XIVAPI_BASE}/character/${id}?extended=1&data=FC`;
+      url = `${XIVAPI_BASE}/character/${encodeURIComponent(id)}?extended=1&data=FC`;
     } else {
-      return res.status(400).json({ error: 'Invalid action. Use action=search or action=character' });
+      return res.status(200).json({
+        error: 'Invalid parameters',
+        message: 'Use action=search with name & server, or action=character with id'
+      });
     }
 
-    const response = await fetch(url);
+    console.log('Fetching XIVAPI:', url);
+
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Portfolio-Site/1.0',
+        'Accept': 'application/json',
+      },
+    });
 
     if (!response.ok) {
-      throw new Error(`XIVAPI error: ${response.status}`);
+      const errorText = await response.text();
+      console.error('XIVAPI response error:', response.status, errorText);
+      return res.status(200).json({
+        error: `XIVAPI returned ${response.status}`,
+        details: errorText.substring(0, 200)
+      });
     }
 
     const data = await response.json();
     res.status(200).json(data);
   } catch (error) {
     console.error('XIVAPI proxy error:', error);
-    res.status(500).json({ error: error.message || 'Failed to fetch XIVAPI data' });
+    res.status(200).json({
+      error: 'Proxy error',
+      message: error.message || 'Failed to fetch XIVAPI data'
+    });
   }
 }
