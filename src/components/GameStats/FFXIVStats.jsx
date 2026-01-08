@@ -101,10 +101,20 @@ export default function FFXIVStats() {
             {/* Character Info Section */}
             <div className="ffxiv-info-section">
               <div className="ffxiv-character-header">
-                <h3 className="ffxiv-character-name">{character.Name}</h3>
-                <span className="ffxiv-server">
-                  {character.Server} ({config.ffxiv.dataCenter})
-                </span>
+                {/* Player Avatar */}
+                {character.Avatar && (
+                  <img
+                    src={character.Avatar}
+                    alt={character.Name}
+                    className="ffxiv-avatar"
+                  />
+                )}
+                <div className="ffxiv-character-header-info">
+                  <h3 className="ffxiv-character-name">{character.Name}</h3>
+                  <span className="ffxiv-server">
+                    {character.Server} ({config.ffxiv.dataCenter})
+                  </span>
+                </div>
               </div>
 
               {/* Active Job */}
@@ -202,10 +212,15 @@ export default function FFXIVStats() {
         /* Show basic info when character data unavailable */
         <div className="ffxiv-character-unavailable">
           <div className="ffxiv-character-header">
-            <h3 className="ffxiv-character-name">{config.ffxiv.characterName}</h3>
-            <span className="ffxiv-server">
-              {config.ffxiv.server} ({config.ffxiv.dataCenter})
-            </span>
+            <div className="ffxiv-avatar-fallback">
+              {config.ffxiv.characterName?.[0] || 'Y'}
+            </div>
+            <div className="ffxiv-character-header-info">
+              <h3 className="ffxiv-character-name">{config.ffxiv.characterName}</h3>
+              <span className="ffxiv-server">
+                {config.ffxiv.server} ({config.ffxiv.dataCenter})
+              </span>
+            </div>
           </div>
           {characterError && (
             <p className="ffxiv-character-error-note">Character data temporarily unavailable</p>

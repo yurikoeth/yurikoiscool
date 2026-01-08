@@ -132,8 +132,35 @@
 
 .ffxiv-character-header {
   display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.ffxiv-character-header-info {
+  display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.ffxiv-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  border: 2px solid #4a6fa5;
+  object-fit: cover;
+}
+
+.ffxiv-avatar-fallback {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #4a6fa5 0%, #2d4a7c 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #fff;
 }
 
 .ffxiv-character-name {
@@ -660,14 +687,6 @@
   border-radius: 8px;
   border: 1px solid rgba(100, 120, 180, 0.2);
   margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.ffxiv-character-unavailable .ffxiv-character-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
 }
 
 .ffxiv-character-error-note {
