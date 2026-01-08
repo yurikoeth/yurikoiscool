@@ -7,11 +7,36 @@
   padding: 2rem 1rem;
 }
 
-/* Grid Layout */
+/* Grid Layout - 2 rows, horizontally scrollable */
 .nft-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-rows: repeat(2, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: 200px;
   gap: 1.25rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #3a3a3a #1a1a1a;
+}
+
+.nft-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.nft-grid::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.nft-grid::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+.nft-grid::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
 }
 
 /* NFT Card */
@@ -312,7 +337,7 @@
 
 @media (max-width: 480px) {
   .nft-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-auto-columns: 150px;
     gap: 0.75rem;
   }
 
