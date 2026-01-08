@@ -1,39 +1,20 @@
 import { config } from '../config.js';
 
 /**
- * Fetches NFTs owned by a wallet address using Ankr API (free, no key needed)
+ * Fetches NFTs owned by a wallet address via the serverless proxy
  * @param {string} walletAddress - The wallet address to fetch NFTs for
- * @param {string} pageToken - Pagination token
+ * @param {string} pageKey - Pagination key
  * @param {number} pageSize - Number of NFTs per page
- * @returns {Promise<{nfts: Array, pageToken: string|null}>}
+ * @returns {Promise<{nfts: Array, pageKey: string|null}>}
  */
-export async function fetchNFTsForWallet(walletAddress = null, pageToken = null, pageSize = 50) {
+export async function fetchNFTsForWallet(walletAddress = null, pageKey = null, pageSize = 100) {
   const address = walletAddress || config.wallet.address;
 
-  if (!address || address === '0x0000000000000000000000000000000000000000') {
-    throw new Error('Wallet address is not configured');
-  }
+  const params = new URLSearchParams({ pageSize: pageSize.toString() });
+  if (address) params.append('address', address);
+  if (pageKey) params.append('pageKey', pageKey);
 
-  // Use Ankr API (free, no key required for basic usage)
-  const requestBody = {
-    jsonrpc: '2.0',
-    method: 'ankr_getNFTsByOwner',
-    params: {
-      blockchain: 'eth',
-      walletAddress: address,
-      pageSize,
-      ...(pageToken && { pageToken }),
-    },
-    id: 1,
-  };
-
-  const response = await fetch('https://rpc.ankr.com/multichain', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(requestBody),
-  });
+  const response = await fetch(`/api/nfts?${params}`);
 
   if (!response.ok) {
     throw new Error(`API error: ${response.status}`);
@@ -41,36 +22,18 @@ export async function fetchNFTsForWallet(walletAddress = null, pageToken = null,
 
   const data = await response.json();
 
-  if (data.error) {
-    throw new Error(data.error.message || 'API error');
+  if (!data.configured) {
+    console.warn('NFT API not configured:', data.message);
+    return { nfts: [], pageKey: null };
   }
 
-  const result = data.result || {};
-
-  // Transform Ankr response to match our expected format
-  const nfts = (result.assets || []).map(item => ({
-    contract: {
-      address: item.contractAddress,
-      name: item.collectionName,
-    },
-    tokenId: item.tokenId,
-    name: item.name || `#${item.tokenId}`,
-    description: item.description,
-    image: {
-      cachedUrl: item.imageUrl,
-      thumbnailUrl: item.imageUrl,
-      originalUrl: item.imageUrl,
-    },
-    collection: {
-      name: item.collectionName,
-      slug: item.symbol,
-    },
-    raw: item,
-  }));
+  if (data.error) {
+    throw new Error(data.error);
+  }
 
   return {
-    nfts,
-    pageToken: result.nextPageToken || null,
+    nfts: data.nfts || [],
+    pageKey: data.pageKey || null,
   };
 }
 
@@ -82,17 +45,17 @@ export async function fetchNFTsForWallet(walletAddress = null, pageToken = null,
  */
 export async function fetchAllNFTs(walletAddress = null, maxNFTs = 200) {
   const allNFTs = [];
-  let pageToken = null;
+  let pageKey = null;
 
   do {
-    const result = await fetchNFTsForWallet(walletAddress, pageToken);
+    const result = await fetchNFTsForWallet(walletAddress, pageKey);
     allNFTs.push(...result.nfts);
-    pageToken = result.pageToken;
+    pageKey = result.pageKey;
 
     if (allNFTs.length >= maxNFTs) {
       break;
     }
-  } while (pageToken);
+  } while (pageKey);
 
   return allNFTs.slice(0, maxNFTs);
 }
