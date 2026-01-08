@@ -120,7 +120,7 @@
 .hero {
   display: flex;
   align-items: center;
-  padding: var(--spacing-3xl) 0;
+  padding: var(--spacing-xl) 0;
   background: var(--color-bg-primary);
   position: relative;
   overflow: hidden;
@@ -129,11 +129,11 @@
 .hero__container {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-3xl);
+  gap: var(--spacing-xl);
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 var(--spacing-lg);
-  padding-top: 80px;
+  padding-top: 60px;
 }
 
 @media (min-width: 1024px) {
