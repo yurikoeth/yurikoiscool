@@ -23,6 +23,7 @@ export const config = {
     characterName: 'Yuriko Mh',
     server: 'Excalibur',
     dataCenter: 'Primal',
+    lodestoneId: '26595912',
   },
 
   // World of Warcraft

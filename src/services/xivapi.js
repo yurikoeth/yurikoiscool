@@ -89,7 +89,13 @@ export async function getCharacter(name, server) {
  * @returns {Promise<Object>} - Full character data
  */
 export async function getConfiguredCharacter() {
-  const { characterName, server } = config.ffxiv;
+  const { characterName, server, lodestoneId } = config.ffxiv;
+
+  // Use Lodestone ID directly if available (more reliable)
+  if (lodestoneId) {
+    return fetchCharacterDetails(lodestoneId);
+  }
+
   return getCharacter(characterName, server);
 }
 
