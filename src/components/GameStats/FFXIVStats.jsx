@@ -11,66 +11,60 @@ import './FFXIVStats.css';
 
 /**
  * FFXIV Stats Component
- * Displays character information from FFXIV using XIVAPI
+ * Displays character information from FFXIV using XIVAPI and FFLogs
  */
 export default function FFXIVStats() {
   const [characterData, setCharacterData] = useState(null);
   const [logsData, setLogsData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [logsLoading, setLogsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [selectedDifficulty, setSelectedDifficulty] = useState('normal');
+  const [logsLoading, setLogsLoading] = useState(true);
+  const [characterError, setCharacterError] = useState(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState('savage');
 
   useEffect(() => {
     let ignore = false;
 
+    // Load character data and FFLogs independently
     async function loadCharacter() {
       try {
-        setLoading(true);
-        setError(null);
-
         const data = await getConfiguredCharacter();
-        if (ignore) return;
-        setCharacterData(data);
-
-        // Load FFLogs data
-        setLogsLoading(true);
-        try {
-          const logs = await fetchAllFFLogsData();
-          if (!ignore) setLogsData(logs);
-        } catch (logsErr) {
-          console.error('Failed to load FFLogs data:', logsErr);
-        } finally {
-          if (!ignore) setLogsLoading(false);
-        }
+        if (!ignore) setCharacterData(data);
       } catch (err) {
         console.error('Failed to load FFXIV character:', err);
-        if (!ignore) setError(err.message || 'Failed to load character data');
+        if (!ignore) setCharacterError(err.message);
       } finally {
         if (!ignore) setLoading(false);
       }
     }
 
+    async function loadLogs() {
+      try {
+        const logs = await fetchAllFFLogsData();
+        if (!ignore) setLogsData(logs);
+      } catch (err) {
+        console.error('Failed to load FFLogs data:', err);
+      } finally {
+        if (!ignore) setLogsLoading(false);
+      }
+    }
+
+    // Load both in parallel
     loadCharacter();
+    loadLogs();
+
     return () => { ignore = true; };
   }, []);
 
-  if (loading) {
+  // Show loading only if both are still loading
+  if (loading && logsLoading) {
     return <LoadingState />;
   }
 
-  if (error) {
-    return <ErrorState message={error} />;
-  }
-
-  if (!characterData?.Character) {
-    return <ErrorState message="No character data available" />;
-  }
-
-  const character = characterData.Character;
-  const { activeJob, jobs } = parseJobs(characterData);
-  const itemLevel = calculateItemLevel(characterData);
-  const freeCompany = getFreeCompany(characterData);
+  // Parse character data if available
+  const character = characterData?.Character;
+  const { activeJob, jobs } = character ? parseJobs(characterData) : { activeJob: null, jobs: [] };
+  const itemLevel = character ? calculateItemLevel(characterData) : 0;
+  const freeCompany = character ? getFreeCompany(characterData) : null;
 
   // Get combat jobs (exclude crafters/gatherers for main display)
   const combatJobs = jobs.filter(
@@ -88,118 +82,136 @@ export default function FFXIVStats() {
         <h2 className="ffxiv-title">Final Fantasy XIV</h2>
       </div>
 
-      <div className="ffxiv-content">
-        {/* Character Portrait Section */}
-        <div className="ffxiv-portrait-section">
-          <div className="ffxiv-portrait-frame">
-            <img
-              src={character.Portrait}
-              alt={character.Name}
-              className="ffxiv-portrait"
-            />
-            <div className="ffxiv-portrait-overlay" />
-          </div>
-        </div>
+      {/* Character Section - only show if data available */}
+      {character ? (
+        <>
+          <div className="ffxiv-content">
+            {/* Character Portrait Section */}
+            <div className="ffxiv-portrait-section">
+              <div className="ffxiv-portrait-frame">
+                <img
+                  src={character.Portrait}
+                  alt={character.Name}
+                  className="ffxiv-portrait"
+                />
+                <div className="ffxiv-portrait-overlay" />
+              </div>
+            </div>
 
-        {/* Character Info Section */}
-        <div className="ffxiv-info-section">
+            {/* Character Info Section */}
+            <div className="ffxiv-info-section">
+              <div className="ffxiv-character-header">
+                <h3 className="ffxiv-character-name">{character.Name}</h3>
+                <span className="ffxiv-server">
+                  {character.Server} ({config.ffxiv.dataCenter})
+                </span>
+              </div>
+
+              {/* Active Job */}
+              {activeJob && (
+                <div className="ffxiv-active-job">
+                  <img
+                    src={activeJob.icon}
+                    alt={activeJob.name}
+                    className="ffxiv-job-icon-large"
+                  />
+                  <div className="ffxiv-job-details">
+                    <span className="ffxiv-job-name">{activeJob.name}</span>
+                    <span className="ffxiv-job-level">Lv. {activeJob.level}</span>
+                  </div>
+                  <div className={`ffxiv-role-badge ffxiv-role-${activeJob.role}`}>
+                    {activeJob.role}
+                  </div>
+                </div>
+              )}
+
+              {/* Item Level */}
+              {itemLevel > 0 && (
+                <div className="ffxiv-item-level">
+                  <span className="ffxiv-il-label">Item Level</span>
+                  <span className="ffxiv-il-value">{itemLevel}</span>
+                </div>
+              )}
+
+              {/* Free Company */}
+              {freeCompany && (
+                <div className="ffxiv-free-company">
+                  <div className="ffxiv-fc-crest">
+                    {freeCompany.crest && (
+                      <div className="ffxiv-fc-crest-layers">
+                        {freeCompany.crest.map((layer, idx) => (
+                          <img
+                            key={idx}
+                            src={layer}
+                            alt=""
+                            className="ffxiv-fc-crest-layer"
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <div className="ffxiv-fc-info">
+                    <span className="ffxiv-fc-tag">&lt;{freeCompany.tag}&gt;</span>
+                    <span className="ffxiv-fc-name">{freeCompany.name}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Jobs Section */}
+          <div className="ffxiv-jobs-section">
+            {/* Combat Jobs */}
+            {combatJobs.length > 0 && (
+              <div className="ffxiv-job-category">
+                <h4 className="ffxiv-category-title">Combat Jobs</h4>
+                <div className="ffxiv-jobs-grid">
+                  {combatJobs.map(job => (
+                    <JobBadge key={job.id} job={job} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Crafting Jobs */}
+            {craftingJobs.length > 0 && (
+              <div className="ffxiv-job-category">
+                <h4 className="ffxiv-category-title">Disciples of the Hand</h4>
+                <div className="ffxiv-jobs-grid">
+                  {craftingJobs.map(job => (
+                    <JobBadge key={job.id} job={job} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Gathering Jobs */}
+            {gatheringJobs.length > 0 && (
+              <div className="ffxiv-job-category">
+                <h4 className="ffxiv-category-title">Disciples of the Land</h4>
+                <div className="ffxiv-jobs-grid">
+                  {gatheringJobs.map(job => (
+                    <JobBadge key={job.id} job={job} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        /* Show basic info when character data unavailable */
+        <div className="ffxiv-character-unavailable">
           <div className="ffxiv-character-header">
-            <h3 className="ffxiv-character-name">{character.Name}</h3>
+            <h3 className="ffxiv-character-name">{config.ffxiv.characterName}</h3>
             <span className="ffxiv-server">
-              {character.Server} ({config.ffxiv.dataCenter})
+              {config.ffxiv.server} ({config.ffxiv.dataCenter})
             </span>
           </div>
-
-          {/* Active Job */}
-          {activeJob && (
-            <div className="ffxiv-active-job">
-              <img
-                src={activeJob.icon}
-                alt={activeJob.name}
-                className="ffxiv-job-icon-large"
-              />
-              <div className="ffxiv-job-details">
-                <span className="ffxiv-job-name">{activeJob.name}</span>
-                <span className="ffxiv-job-level">Lv. {activeJob.level}</span>
-              </div>
-              <div className={`ffxiv-role-badge ffxiv-role-${activeJob.role}`}>
-                {activeJob.role}
-              </div>
-            </div>
-          )}
-
-          {/* Item Level */}
-          {itemLevel > 0 && (
-            <div className="ffxiv-item-level">
-              <span className="ffxiv-il-label">Item Level</span>
-              <span className="ffxiv-il-value">{itemLevel}</span>
-            </div>
-          )}
-
-          {/* Free Company */}
-          {freeCompany && (
-            <div className="ffxiv-free-company">
-              <div className="ffxiv-fc-crest">
-                {freeCompany.crest && (
-                  <div className="ffxiv-fc-crest-layers">
-                    {freeCompany.crest.map((layer, idx) => (
-                      <img
-                        key={idx}
-                        src={layer}
-                        alt=""
-                        className="ffxiv-fc-crest-layer"
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="ffxiv-fc-info">
-                <span className="ffxiv-fc-tag">&lt;{freeCompany.tag}&gt;</span>
-                <span className="ffxiv-fc-name">{freeCompany.name}</span>
-              </div>
-            </div>
+          {characterError && (
+            <p className="ffxiv-character-error-note">Character data temporarily unavailable</p>
           )}
         </div>
-      </div>
-
-      {/* Jobs Section */}
-      <div className="ffxiv-jobs-section">
-        {/* Combat Jobs */}
-        {combatJobs.length > 0 && (
-          <div className="ffxiv-job-category">
-            <h4 className="ffxiv-category-title">Combat Jobs</h4>
-            <div className="ffxiv-jobs-grid">
-              {combatJobs.map(job => (
-                <JobBadge key={job.id} job={job} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Crafting Jobs */}
-        {craftingJobs.length > 0 && (
-          <div className="ffxiv-job-category">
-            <h4 className="ffxiv-category-title">Disciples of the Hand</h4>
-            <div className="ffxiv-jobs-grid">
-              {craftingJobs.map(job => (
-                <JobBadge key={job.id} job={job} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Gathering Jobs */}
-        {gatheringJobs.length > 0 && (
-          <div className="ffxiv-job-category">
-            <h4 className="ffxiv-category-title">Disciples of the Land</h4>
-            <div className="ffxiv-jobs-grid">
-              {gatheringJobs.map(job => (
-                <JobBadge key={job.id} job={job} />
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* FFLogs Section */}
       <div className="ffxiv-logs-section">
@@ -290,7 +302,7 @@ export default function FFXIVStats() {
       {/* Footer */}
       <div className="ffxiv-footer">
         <a
-          href={`https://na.finalfantasyxiv.com/lodestone/character/${characterData.Character.ID}/`}
+          href={`https://na.finalfantasyxiv.com/lodestone/character/${config.ffxiv.lodestoneId || ''}/`}
           target="_blank"
           rel="noopener noreferrer"
           className="ffxiv-lodestone-link"
