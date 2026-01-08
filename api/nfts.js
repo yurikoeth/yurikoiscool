@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     // Collections to hide
-    const hiddenCollections = ['micent', 'van gogh', 'bitcoin milady', 'shishi', 'fortuna maker'];
+    const hiddenCollections = ['micent', 'van gogh', 'bitcoin milady', 'shishi', 'fortuna maker', 'expansion milady'];
 
     // Transform Alchemy response to match existing format
     const nfts = (data.ownedNfts || [])
